@@ -1,0 +1,264 @@
+{
+    "cards": [
+        {
+            "rank": "ACE",
+            "suit": "SPADES",
+            "code": "AS"
+        },
+        {
+            "rank": "2",
+            "suit": "SPADES",
+            "code": "2S"
+        },
+        {
+            "rank": "3",
+            "suit": "SPADES",
+            "code": "3S"
+        },
+        {
+            "rank": "4",
+            "suit": "SPADES",
+            "code": "4S"
+        },
+        {
+            "rank": "5",
+            "suit": "SPADES",
+            "code": "5S"
+        },
+        {
+            "rank": "6",
+            "suit": "SPADES",
+            "code": "6S"
+        },
+        {
+            "rank": "7",
+            "suit": "SPADES",
+            "code": "7S"
+        },
+        {
+            "rank": "8",
+            "suit": "SPADES",
+            "code": "8S"
+        },
+        {
+            "rank": "9",
+            "suit": "SPADES",
+            "code": "9S"
+        },
+        {
+            "rank": "10",
+            "suit": "SPADES",
+            "code": "1S"
+        },
+        {
+            "rank": "JACK",
+            "suit": "SPADES",
+            "code": "JS"
+        },
+        {
+            "rank": "QUEEN",
+            "suit": "SPADES",
+            "code": "QS"
+        },
+        {
+            "rank": "KING",
+            "suit": "SPADES",
+            "code": "KS"
+        },
+        {
+            "rank": "ACE",
+            "suit": "DIAMONDS",
+            "code": "AD"
+        },
+        {
+            "rank": "2",
+            "suit": "DIAMONDS",
+            "code": "2D"
+        },
+        {
+            "rank": "3",
+            "suit": "DIAMONDS",
+            "code": "3D"
+        },
+        {
+            "rank": "4",
+            "suit": "DIAMONDS",
+            "code": "4D"
+        },
+        {
+            "rank": "5",
+            "suit": "DIAMONDS",
+            "code": "5D"
+        },
+        {
+            "rank": "6",
+            "suit": "DIAMONDS",
+            "code": "6D"
+        },
+        {
+            "rank": "7",
+            "suit": "DIAMONDS",
+            "code": "7D"
+        },
+        {
+            "rank": "8",
+            "suit": "DIAMONDS",
+            "code": "8D"
+        },
+        {
+            "rank": "9",
+            "suit": "DIAMONDS",
+            "code": "9D"
+        },
+        {
+            "rank": "10",
+            "suit": "DIAMONDS",
+            "code": "1D"
+        },
+        {
+            "rank": "JACK",
+            "suit": "DIAMONDS",
+            "code": "JD"
+        },
+        {
+            "rank": "QUEEN",
+            "suit": "DIAMONDS",
+            "code": "QD"
+        },
+        {
+            "rank": "KING",
+            "suit": "DIAMONDS",
+            "code": "KD"
+        },
+        {
+            "rank": "ACE",
+            "suit": "CLUBS",
+            "code": "AC"
+        },
+        {
+            "rank": "2",
+            "suit": "CLUBS",
+            "code": "2C"
+        },
+        {
+            "rank": "3",
+            "suit": "CLUBS",
+            "code": "3C"
+        },
+        {
+            "rank": "4",
+            "suit": "CLUBS",
+            "code": "4C"
+        },
+        {
+            "rank": "5",
+            "suit": "CLUBS",
+            "code": "5C"
+        },
+        {
+            "rank": "6",
+            "suit": "CLUBS",
+            "code": "6C"
+        },
+        {
+            "rank": "7",
+            "suit": "CLUBS",
+            "code": "7C"
+        },
+        {
+            "rank": "8",
+            "suit": "CLUBS",
+            "code": "8C"
+        },
+        {
+            "rank": "9",
+            "suit": "CLUBS",
+            "code": "9C"
+        },
+        {
+            "rank": "10",
+            "suit": "CLUBS",
+            "code": "1C"
+        },
+        {
+            "rank": "JACK",
+            "suit": "CLUBS",
+            "code": "JC"
+        },
+        {
+            "rank": "QUEEN",
+            "suit": "CLUBS",
+            "code": "QC"
+        },
+        {
+            "rank": "KING",
+            "suit": "CLUBS",
+            "code": "KC"
+        },
+        {
+            "rank": "ACE",
+            "suit": "HEARTS",
+            "code": "AH"
+        },
+        {
+            "rank": "2",
+            "suit": "HEARTS",
+            "code": "2H"
+        },
+        {
+            "rank": "3",
+            "suit": "HEARTS",
+            "code": "3H"
+        },
+        {
+            "rank": "4",
+            "suit": "HEARTS",
+            "code": "4H"
+        },
+        {
+            "rank": "5",
+            "suit": "HEARTS",
+            "code": "5H"
+        },
+        {
+            "rank": "6",
+            "suit": "HEARTS",
+            "code": "6H"
+        },
+        {
+            "rank": "7",
+            "suit": "HEARTS",
+            "code": "7H"
+        },
+        {
+            "rank": "8",
+            "suit": "HEARTS",
+            "code": "8H"
+        },
+        {
+            "rank": "9",
+            "suit": "HEARTS",
+            "code": "9H"
+        },
+        {
+            "rank": "10",
+            "suit": "HEARTS",
+            "code": "1H"
+        },
+        {
+            "rank": "JACK",
+            "suit": "HEARTS",
+            "code": "JH"
+        },
+        {
+            "rank": "QUEEN",
+            "suit": "HEARTS",
+            "code": "QH"
+        },
+        {
+            "rank": "KING",
+            "suit": "HEARTS",
+            "code": "KH"
+        }
+    ]
+}

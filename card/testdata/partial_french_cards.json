@@ -1,0 +1,29 @@
+{
+    "cards": [
+        {
+            "rank": "ACE",
+            "suit": "SPADES",
+            "code": "AS"
+        },
+        {
+            "rank": "KING",
+            "suit": "DIAMONDS",
+            "code": "KD"
+        },
+        {
+            "rank": "ACE",
+            "suit": "CLUBS",
+            "code": "AC"
+        },
+        {
+            "rank": "2",
+            "suit": "CLUBS",
+            "code": "2C"
+        },
+        {
+            "rank": "KING",
+            "suit": "HEARTS",
+            "code": "KH"
+        }
+    ]
+}
