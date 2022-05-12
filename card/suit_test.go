@@ -9,7 +9,7 @@ import (
 
 var _ = Describe("Suit", func() {
 	Describe("Getting suit from code", func() {
-		Context("from valid list of suits", func() {
+		Context("from valid list of french suits", func() {
 			suits := french.Suits
 
 			Context("and a valid code", func() {

@@ -69,11 +69,22 @@ var _ = Describe("Deck", func() {
 			Expect(err).ToNot(HaveOccurred())
 			Expect(cards).To(HaveLen(52))
 
-			It("should return the top cards in the stack", func() {
-				drawn, err := deck.Draw(5)
-				Expect(err).ToNot(HaveOccurred())
-				Expect(drawn).To(HaveLen(5))
-				Expect(deck.Remaining()).To(Equal(47))
+			Context("with enough cards", func() {
+				It("should return the top cards in the stack", func() {
+					drawn, err := deck.Draw(5)
+					Expect(err).ToNot(HaveOccurred())
+					Expect(drawn).To(HaveLen(5))
+					Expect(deck.Remaining()).To(Equal(47))
+				})
+			})
+
+			Context("with enough cards again", func() {
+				It("should return the top cards in the stack", func() {
+					drawn, err := deck.Draw(10)
+					Expect(err).ToNot(HaveOccurred())
+					Expect(drawn).To(HaveLen(10))
+					Expect(deck.Remaining()).To(Equal(37))
+				})
 			})
 		})
 
@@ -88,11 +99,20 @@ var _ = Describe("Deck", func() {
 			Expect(err).ToNot(HaveOccurred())
 			Expect(cards).To(HaveLen(5))
 
-			It("should return a shuffled deck", func() {
-				drawn, err := deck.Draw(3)
-				Expect(err).ToNot(HaveOccurred())
-				Expect(drawn).To(HaveLen(3))
-				Expect(deck.Remaining()).To(Equal(2))
+			Context("with enough cards", func() {
+				It("should return the top cards in the stack", func() {
+					drawn, err := deck.Draw(3)
+					Expect(err).ToNot(HaveOccurred())
+					Expect(drawn).To(HaveLen(3))
+					Expect(deck.Remaining()).To(Equal(2))
+				})
+			})
+
+			Context("without enough cards", func() {
+				It("should return an error", func() {
+					_, err := deck.Draw(3)
+					Expect(err).To(HaveOccurred())
+				})
 			})
 		})
 	})
