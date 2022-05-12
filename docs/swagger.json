@@ -1,0 +1,78 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "A REST API for playing with a deck of cards.",
+        "title": "Deckr",
+        "contact": {
+            "name": "Michaël Giovanni Jules",
+            "url": "https://mgjules.dev",
+            "email": "julesmichaelgiovanni@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "v0.1.0"
+    },
+    "paths": {
+        "/": {
+            "get": {
+                "description": "checks if server is running",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "core"
+                ],
+                "summary": "Health Check",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/version": {
+            "get": {
+                "description": "checks the server's version",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "core"
+                ],
+                "summary": "Health Check",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/build.Info"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "build.Info": {
+            "type": "object",
+            "properties": {
+                "dirty_build": {
+                    "type": "boolean"
+                },
+                "go_version": {
+                    "type": "string"
+                },
+                "last_commit": {
+                    "type": "string"
+                },
+                "revision": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

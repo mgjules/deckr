@@ -1,0 +1,51 @@
+definitions:
+  build.Info:
+    properties:
+      dirty_build:
+        type: boolean
+      go_version:
+        type: string
+      last_commit:
+        type: string
+      revision:
+        type: string
+    type: object
+info:
+  contact:
+    email: julesmichaelgiovanni@gmail.com
+    name: Michaël Giovanni Jules
+    url: https://mgjules.dev
+  description: A REST API for playing with a deck of cards.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Deckr
+  version: v0.1.0
+paths:
+  /:
+    get:
+      description: checks if server is running
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Health Check
+      tags:
+      - core
+  /version:
+    get:
+      description: checks the server's version
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/build.Info'
+      summary: Health Check
+      tags:
+      - core
+swagger: "2.0"
