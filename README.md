@@ -88,8 +88,6 @@ $ mage -v testRace
 
 #### Build deckr for MacOS M1
 
-Example:
-
 ```shell
 $ mage -v build:macOSArm64
 ```
