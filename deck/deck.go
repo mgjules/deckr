@@ -72,7 +72,7 @@ func (d *Deck) Draw(n int) ([]card.Card, error) {
 	for i := 0; i < n; i++ {
 		var c card.Card
 
-		// Pop card from deck (considered a stack).
+		// Dealing from the top (KH, QH, JH, TH, 9H, ...).
 		c, d.cards = d.cards[len(d.cards)-1], d.cards[:len(d.cards)-1]
 
 		cards = append(cards, c)
