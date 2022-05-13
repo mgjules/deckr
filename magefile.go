@@ -28,17 +28,12 @@ func init() {
 
 // Run tests
 func Test() error {
-	return sh.Run("go", "test", "./...")
+	return sh.Run("ginkgo", "run", "./...")
 }
 
 // Run tests with race detector
 func TestRace() error {
-	return sh.Run("go", "test", "-race", "./...")
-}
-
-// Run go vet linter
-func Vet() error {
-	return sh.Run("go", "vet", "./...")
+	return sh.Run("ginkgo", "run", "--race", "./...")
 }
 
 // Run go mod tidy
@@ -51,7 +46,7 @@ func Docs() error {
 	return sh.Run("swag", "init", "--parseDependency", "--parseInternal")
 }
 
-// Lint
+// Run golangci linters
 func Lint() error {
 	return sh.Run("golangci-lint", "run", "./...", "--fast")
 }

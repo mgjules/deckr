@@ -4,10 +4,10 @@ env:
   - GO111MODULE=on
 before:
   hooks:
-    - mage tidy
-    - mage vet
-    - mage lint
-    - mage test
+    - mage -v tidy
+    - mage -v vet
+    - mage -v lint
+    - mage -v testRace
 builds:
   - env:
       - CGO_ENABLED=0
