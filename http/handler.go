@@ -120,7 +120,7 @@ func (s *Server) handleCreateDeck() gin.HandlerFunc {
 // @Description  opens a deck of cards given an id
 // @Tags         deck
 // @Produce      json
-// @Param        id   path      string    true  "id of deck"       example(9302b603-13bb-5275-a3b9-5fcefafa34e0)
+// @Param        id   path      string  true  "id of deck"       example(9302b603-13bb-5275-a3b9-5fcefafa34e0)
 // @Success      200  {object}  http.DeckOpened
 // @Failure      400  {object}  http.Error
 // @Failure      500  {object}  http.Error
@@ -172,8 +172,8 @@ func (s *Server) handleOpenDeck() gin.HandlerFunc {
 // @Tags         deck
 // @Produce      json
 // @Param        id   path      string  true  "id of deck"  example(9302b603-13bb-5275-a3b9-5fcefafa34e0)
-// @Param        num  query     int       true  "number of cards"  example(5)
-// @Success      200            {object}  http.Cards
+// @Param        num  query     int     true  "number of cards"  example(5)
+// @Success      200  {object}  http.Cards
 // @Failure      400    {object}  http.Error
 // @Failure      500    {object}  http.Error
 // @Router       /decks/{id}/draw [get]

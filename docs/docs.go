@@ -109,8 +109,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/http.DeckOpened"
                         }
@@ -159,10 +159,10 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/http.Card"
+                            "$ref": "#/definitions/http.Cards"
                         }
                     },
                     "400": {
@@ -234,6 +234,18 @@ const docTemplate = `{
                 "value": {
                     "type": "string",
                     "example": "ACE"
+                }
+            }
+        },
+        "http.Cards": {
+            "description": "represents a collection of cards",
+            "type": "object",
+            "properties": {
+                "cards": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/http.Card"
+                    }
                 }
             }
         },
