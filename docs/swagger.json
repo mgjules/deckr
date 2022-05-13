@@ -12,7 +12,7 @@
             "name": "Apache 2.0",
             "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
         },
-        "version": "v0.1.0"
+        "version": "v0.1.1"
     },
     "paths": {
         "/": {

@@ -9,7 +9,7 @@ import (
 )
 
 // @title        Deckr
-// @version      v0.1.0
+// @version      v0.1.1
 // @description  A REST API for playing with a deck of cards.
 
 // @contact.name   Michaël Giovanni Jules
