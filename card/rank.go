@@ -18,8 +18,8 @@ func (rs Ranks) Ranks() []Rank {
 	return rs
 }
 
-// GetRankFromCode returns the rank from the given code.
-func (rs Ranks) GetRankFromCode(c Code) (Rank, bool) {
+// RankFromCode returns the rank from the given code.
+func (rs Ranks) RankFromCode(c Code) (Rank, bool) {
 	for _, r := range rs.Ranks() {
 		if strings.EqualFold(r.String()[0:1], c.Rank()) {
 			return r, true

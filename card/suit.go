@@ -18,8 +18,8 @@ func (ss Suits) Suits() []Suit {
 	return ss
 }
 
-// GetSuitFromCode returns the suit from the given code.
-func (ss Suits) GetSuitFromCode(c Code) (Suit, bool) {
+// SuitFromCode returns the suit from the given code.
+func (ss Suits) SuitFromCode(c Code) (Suit, bool) {
 	for _, s := range ss.Suits() {
 		if strings.EqualFold(s.String()[0:1], c.Suit()) {
 			return s, true

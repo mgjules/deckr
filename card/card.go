@@ -43,12 +43,12 @@ func NewCards(rs Ranks, ss Suits, codes ...Code) ([]Card, error) {
 	// Partial cards using codes.
 	if len(codes) > 0 {
 		for _, c := range codes {
-			r, ok := rs.GetRankFromCode(c)
+			r, ok := rs.RankFromCode(c)
 			if !ok {
 				return nil, fmt.Errorf("card code '%s' has an invalid rank", c)
 			}
 
-			s, ok := ss.GetSuitFromCode(c)
+			s, ok := ss.SuitFromCode(c)
 			if !ok {
 				return nil, fmt.Errorf("card code '%s' has an invalid suit", c)
 			}
