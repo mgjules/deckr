@@ -58,8 +58,8 @@ func (Server) handleSwagger() gin.HandlerFunc {
 // @Produce      json
 // @Param        codes  query     []string  false  "list of codes"  example(AS, 2C, 3D, 4H, 5S)
 // @Success      201    {object}  http.DeckClosed
-// @Failure      400  {object}  http.Error
-// @Failure      500  {object}  http.Error
+// @Failure      400    {object}  http.Error
+// @Failure      500    {object}  http.Error
 // @Router       /decks [post]
 func (s *Server) handleCreateDeck() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -123,6 +123,7 @@ func (s *Server) handleCreateDeck() gin.HandlerFunc {
 // @Param        id   path      string  true  "id of deck"       example(9302b603-13bb-5275-a3b9-5fcefafa34e0)
 // @Success      200  {object}  http.DeckOpened
 // @Failure      400  {object}  http.Error
+// @Failure      404  {object}  http.Error
 // @Failure      500  {object}  http.Error
 // @Router       /decks/{id} [get]
 func (s *Server) handleOpenDeck() gin.HandlerFunc {
@@ -174,8 +175,9 @@ func (s *Server) handleOpenDeck() gin.HandlerFunc {
 // @Param        id   path      string  true  "id of deck"  example(9302b603-13bb-5275-a3b9-5fcefafa34e0)
 // @Param        num  query     int     true  "number of cards"  example(5)
 // @Success      200  {object}  http.Cards
-// @Failure      400    {object}  http.Error
-// @Failure      500    {object}  http.Error
+// @Failure      400  {object}  http.Error
+// @Failure      404  {object}  http.Error
+// @Failure      500  {object}  http.Error
 // @Router       /decks/{id}/draw [get]
 func (s *Server) handleDrawCards() gin.HandlerFunc {
 	return func(c *gin.Context) {

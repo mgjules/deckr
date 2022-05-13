@@ -143,6 +143,10 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/http.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/http.Error'
         "500":
           description: Internal Server Error
           schema:
@@ -176,6 +180,10 @@ paths:
             $ref: '#/definitions/http.Cards'
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/http.Error'
+        "404":
+          description: Not Found
           schema:
             $ref: '#/definitions/http.Error'
         "500":
