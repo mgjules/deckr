@@ -17,9 +17,9 @@ var _ = Describe("Suit", func() {
 				Expect(err).ToNot(HaveOccurred())
 
 				It("should return back a valid suit", func() {
-					r, ok := suits.SuitFromCode(*code)
+					s, ok := suits.SuitFromCode(*code)
 					Expect(ok).To(BeTrue())
-					Expect(r).To(Equal(suits[0]))
+					Expect(*s).To(Equal(suits[0]))
 				})
 			})
 

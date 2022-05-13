@@ -3,11 +3,27 @@ package card
 import "strings"
 
 // Suit represents the suit of a card.
-type Suit string
+type Suit struct {
+	name string
+	code string
+}
+
+// NewSuit returns a new suit given a name and code.
+func NewSuit(name, code string) Suit {
+	return Suit{
+		name: name,
+		code: code,
+	}
+}
+
+// Code returns the code of the suit.
+func (s Suit) Code() string {
+	return s.code
+}
 
 // String implements the Stringer interface.
 func (s Suit) String() string {
-	return string(s)
+	return s.name
 }
 
 // Suits is a collection of Suit.
@@ -19,12 +35,12 @@ func (ss Suits) Suits() []Suit {
 }
 
 // SuitFromCode returns the suit from the given code.
-func (ss Suits) SuitFromCode(c Code) (Suit, bool) {
+func (ss Suits) SuitFromCode(c Code) (*Suit, bool) {
 	for _, s := range ss.Suits() {
-		if strings.EqualFold(s.String()[0:1], c.Suit()) {
-			return s, true
+		if strings.EqualFold(s.Code(), c.Suit()) {
+			return &s, true
 		}
 	}
 
-	return "", false
+	return nil, false
 }

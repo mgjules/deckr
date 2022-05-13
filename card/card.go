@@ -53,7 +53,7 @@ func NewCards(comp Composition, codes ...Code) ([]Card, error) {
 				return nil, fmt.Errorf("card code '%s' has an invalid suit", c)
 			}
 
-			cards = append(cards, *NewCard(*r, s, c))
+			cards = append(cards, *NewCard(*r, *s, c))
 		}
 
 		return cards, nil

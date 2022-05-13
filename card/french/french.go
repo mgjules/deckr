@@ -21,10 +21,10 @@ var (
 
 // Suits
 var (
-	spades   card.Suit = "SPADES"   // ♠
-	diamonds card.Suit = "DIAMONDS" // ♦
-	clubs    card.Suit = "CLUBS"    // ♣
-	hearts   card.Suit = "HEARTS"   // ♥
+	spades   = card.NewSuit("SPADES", "S")   // ♠
+	diamonds = card.NewSuit("DIAMONDS", "D") // ♦
+	clubs    = card.NewSuit("CLUBS", "C")    // ♣
+	hearts   = card.NewSuit("HEARTS", "H")   // ♥
 )
 
 // Composition returns the french deck composition.

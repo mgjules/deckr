@@ -95,7 +95,7 @@ func (s *Server) handleCreateDeck() gin.HandlerFunc {
 		for _, card := range d.Cards() {
 			rd.Cards = append(rd.Cards, repo.Card{
 				Rank: repo.Rank{Name: card.Rank().String(), Code: card.Rank().Code()},
-				Suit: card.Suit().String(),
+				Suit: repo.Suit{Name: card.Suit().String(), Code: card.Suit().Code()},
 				Code: card.Code().String(),
 			})
 		}
@@ -158,7 +158,7 @@ func (s *Server) handleOpenDeck() gin.HandlerFunc {
 		for _, card := range rd.Cards {
 			d.Cards = append(d.Cards, Card{
 				Value: card.Rank.Name,
-				Suit:  card.Suit,
+				Suit:  card.Suit.Name,
 				Code:  card.Code,
 			})
 		}
@@ -215,7 +215,7 @@ func (s *Server) handleDrawCards() gin.HandlerFunc {
 		var cc []card.Card
 		for _, rc := range rd.Cards {
 			rank := card.NewRank(rc.Rank.Name, rc.Rank.Code)
-			suit := card.Suit(rc.Suit)
+			suit := card.NewSuit(rc.Suit.Name, rc.Suit.Code)
 
 			var code *card.Code
 			code, err = card.NewCode(rc.Code)
@@ -259,7 +259,7 @@ func (s *Server) handleDrawCards() gin.HandlerFunc {
 		for _, c := range d.Cards() {
 			rd.Cards = append(rd.Cards, repo.Card{
 				Rank: repo.Rank{Name: c.Rank().String(), Code: c.Rank().Code()},
-				Suit: c.Suit().String(),
+				Suit: repo.Suit{Name: c.Suit().String(), Code: c.Suit().Code()},
 				Code: c.Code().String(),
 			})
 		}
