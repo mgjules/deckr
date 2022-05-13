@@ -29,7 +29,7 @@ func NewCode(c string) (*Code, error) {
 
 // NewCodeFromRankSuit returns a new code given a rank and suit.
 func NewCodeFromRankSuit(r Rank, s Suit) (*Code, error) {
-	return NewCode(r.String()[0:1] + s.String()[0:1])
+	return NewCode(r.Code() + s.Code())
 }
 
 // String implements the Stringer interface.
