@@ -3,6 +3,7 @@ package deck
 import (
 	"errors"
 	"math/rand"
+	"time"
 
 	"github.com/mgjules/deckr/card"
 	uuid "github.com/satori/go.uuid"
@@ -55,6 +56,7 @@ func (d Deck) IsShuffled() bool {
 
 // Shuffle shuffles the cards randomly in the deck.
 func (d *Deck) Shuffle() {
+	rand.Seed(time.Now().UnixNano())
 	rand.Shuffle(len(d.cards), func(i, j int) {
 		d.cards[i], d.cards[j] = d.cards[j], d.cards[i]
 	})
