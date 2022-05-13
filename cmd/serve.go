@@ -11,6 +11,7 @@ import (
 	"github.com/mgjules/deckr/build"
 	"github.com/mgjules/deckr/http"
 	"github.com/mgjules/deckr/logger"
+	"github.com/mgjules/deckr/repo/inmemory"
 	"github.com/urfave/cli/v2"
 )
 
@@ -53,7 +54,9 @@ var serve = &cli.Command{
 			return fmt.Errorf("new build info: %w", err)
 		}
 
-		server := http.NewServer(debug, host, port, log, info)
+		repository := inmemory.NewRepository(log)
+
+		server := http.NewServer(debug, host, port, log, info, repository)
 		go func() {
 			if err := server.Start(); err != nil {
 				log.Errorf("start server: %v", err)

@@ -1,12 +1,15 @@
 package deck
 
 import (
-	"fmt"
+	"errors"
 	"math/rand"
 
-	"github.com/google/uuid"
 	"github.com/mgjules/deckr/card"
+	uuid "github.com/satori/go.uuid"
 )
+
+// ErrNotEnoughCards is the error returned when there are not enough cards in the deck.
+var ErrNotEnoughCards = errors.New("not enough cards")
 
 // Deck represents a deck of cards.
 type Deck struct {
@@ -15,18 +18,24 @@ type Deck struct {
 	cards    []card.Card
 }
 
-// New creates a new deck with the given number of cards.
-func New(cards ...card.Card) (*Deck, error) {
-	id, err := uuid.NewRandom()
-	if err != nil {
-		return nil, fmt.Errorf("new deck id: %w", err)
+// New creates a new deck with the given options.
+func New(opts ...Option) (*Deck, error) {
+	var d Deck
+
+	for _, applyOpt := range opts {
+		applyOpt(&d)
 	}
 
-	return &Deck{
-		id:       id.String(),
-		shuffled: false,
-		cards:    cards,
-	}, nil
+	if d.id == "" {
+		d.id = uuid.NewV4().String()
+	}
+
+	return &d, nil
+}
+
+// ID returns the id of the deck.
+func (d Deck) ID() string {
+	return d.id
 }
 
 // Cards returns the cards in the deck.
@@ -34,7 +43,7 @@ func (d Deck) Cards() []card.Card {
 	return d.cards
 }
 
-// Remaining returns the number of cards remaining in the deck.
+// Remaining returns the cards remaining in the deck.
 func (d Deck) Remaining() int {
 	return len(d.cards)
 }
@@ -56,7 +65,7 @@ func (d *Deck) Shuffle() {
 // Draw returns n number of cards from the deck.
 func (d *Deck) Draw(n int) ([]card.Card, error) {
 	if n > d.Remaining() {
-		return nil, fmt.Errorf("cannot draw %d cards as only %d remaining", n, d.Remaining())
+		return nil, ErrNotEnoughCards
 	}
 
 	var cards []card.Card

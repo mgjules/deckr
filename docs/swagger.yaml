@@ -10,6 +10,55 @@ definitions:
       revision:
         type: string
     type: object
+  http.Card:
+    description: represents a card
+    properties:
+      code:
+        example: AS
+        type: string
+      suit:
+        example: SPADES
+        type: string
+      value:
+        example: ACE
+        type: string
+    type: object
+  http.DeckClosed:
+    description: represents a closed deck of cards
+    properties:
+      deck_id:
+        example: f6afe993-9847-508e-b206-2487f1ef5a3c
+        type: string
+      remaining:
+        example: 1
+        type: integer
+      shuffled:
+        example: true
+        type: boolean
+    type: object
+  http.DeckOpened:
+    description: represents a opened deck of cards
+    properties:
+      cards:
+        items:
+          $ref: '#/definitions/http.Card'
+        type: array
+      deck_id:
+        example: f6afe993-9847-508e-b206-2487f1ef5a3c
+        type: string
+      remaining:
+        example: 1
+        type: integer
+      shuffled:
+        example: true
+        type: boolean
+    type: object
+  http.Error:
+    description: defines the structure for a failed response
+    properties:
+      error:
+        type: string
+    type: object
 info:
   contact:
     email: julesmichaelgiovanni@gmail.com
@@ -35,6 +84,99 @@ paths:
       summary: Health Check
       tags:
       - core
+  /decks:
+    post:
+      description: creates a new full or partial deck of cards given an optional list
+        of codes
+      parameters:
+      - description: list of codes
+        example: AS, 2C, 3D, 4H, 5S
+        in: query
+        items:
+          type: string
+        name: codes
+        type: array
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/http.DeckClosed'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.Error'
+      summary: creates a new deck of cards
+      tags:
+      - deck
+  /decks/{id}:
+    get:
+      description: opens a deck of cards given an id
+      parameters:
+      - description: id of deck
+        example: 9302b603-13bb-5275-a3b9-5fcefafa34e0
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/http.DeckOpened'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.Error'
+      summary: opens a deck of cards
+      tags:
+      - deck
+  /decks/{id}/draw:
+    get:
+      description: draws cards from a deck of cards given an id and the number of
+        cards
+      parameters:
+      - description: id of deck
+        example: 9302b603-13bb-5275-a3b9-5fcefafa34e0
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: number of cards
+        example: 5
+        in: query
+        name: num
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/http.Card'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.Error'
+      summary: draws cards from a deck of cards
+      tags:
+      - deck
   /version:
     get:
       description: checks the server's version
@@ -45,7 +187,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/build.Info'
-      summary: Health Check
+      summary: Version
       tags:
       - core
 swagger: "2.0"

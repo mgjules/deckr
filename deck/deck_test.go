@@ -21,7 +21,7 @@ var _ = Describe("Deck", func() {
 			original = append(original, cards...)
 
 			It("should return a shuffled deck", func() {
-				deck, err := deck.New(cards...)
+				deck, err := deck.New(deck.WithCards(cards...))
 				Expect(err).ToNot(HaveOccurred())
 				Expect(deck.IsShuffled()).To(BeFalse())
 
@@ -44,7 +44,7 @@ var _ = Describe("Deck", func() {
 			original = append(original, cards...)
 
 			It("should return a shuffled deck", func() {
-				deck, err := deck.New(cards...)
+				deck, err := deck.New(deck.WithCards(cards...))
 				Expect(err).ToNot(HaveOccurred())
 				Expect(deck.IsShuffled()).To(BeFalse())
 
@@ -65,7 +65,7 @@ var _ = Describe("Deck", func() {
 			cards, err := card.NewCards(ranks, suits)
 			Expect(err).ToNot(HaveOccurred())
 
-			deck, err := deck.New(cards...)
+			deck, err := deck.New(deck.WithCards(cards...))
 			Expect(err).ToNot(HaveOccurred())
 			Expect(cards).To(HaveLen(52))
 
@@ -95,7 +95,7 @@ var _ = Describe("Deck", func() {
 			cards, err := card.NewCards(ranks, suits, codes...)
 			Expect(err).ToNot(HaveOccurred())
 
-			deck, err := deck.New(cards...)
+			deck, err := deck.New(deck.WithCards(cards...))
 			Expect(err).ToNot(HaveOccurred())
 			Expect(cards).To(HaveLen(5))
 

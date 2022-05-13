@@ -5,13 +5,14 @@ go 1.18
 require (
 	github.com/gin-contrib/zap v0.0.2
 	github.com/gin-gonic/gin v1.7.7
-	github.com/google/uuid v1.3.0
+	github.com/gofrs/uuid v4.2.0+incompatible
 	github.com/hashicorp/hcl v1.0.0
 	github.com/imdario/mergo v0.3.12
 	github.com/json-iterator/go v1.1.12
 	github.com/magefile/mage v1.13.0
 	github.com/onsi/ginkgo/v2 v2.1.4
 	github.com/onsi/gomega v1.19.0
+	github.com/satori/go.uuid v1.2.0
 	github.com/swaggo/gin-swagger v1.4.3
 	github.com/swaggo/swag v1.8.1
 	github.com/uptrace/opentelemetry-go-extra/otelzap v0.1.13

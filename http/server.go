@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mgjules/deckr/build"
 	"github.com/mgjules/deckr/logger"
+	"github.com/mgjules/deckr/repo"
 )
 
 const (
@@ -23,8 +24,9 @@ const (
 type Server struct {
 	router *gin.Engine
 	http   *http.Server
-	logger *logger.Logger
+	log    *logger.Logger
 	build  *build.Info
+	repo   repo.Repository
 	addr   string
 }
 
@@ -35,6 +37,7 @@ func NewServer(
 	port int,
 	logger *logger.Logger,
 	build *build.Info,
+	repo repo.Repository,
 ) *Server {
 	if prod {
 		gin.SetMode(gin.ReleaseMode)
@@ -47,8 +50,9 @@ func NewServer(
 	s := Server{
 		router: gin.Default(),
 		addr:   fmt.Sprintf("%s:%d", host, port),
-		logger: logger,
+		log:    logger,
 		build:  build,
+		repo:   repo,
 	}
 
 	desugared := logger.Desugar()
@@ -78,12 +82,19 @@ func (s *Server) registerRoutes() {
 
 	// Swagger
 	s.router.GET("/swagger/*any", s.handleSwagger())
+
+	deck := s.router.Group("/decks")
+	{
+		deck.POST("", s.handleCreateDeck())
+		deck.GET("/:id", s.handleOpenDeck())
+		deck.GET("/:id/draw", s.handleDrawCards())
+	}
 }
 
 // Start starts the server.
 // It blocks until the server stops.
 func (s *Server) Start() error {
-	s.logger.Infof("Listening on http://%s...", s.addr)
+	s.log.Infof("Listening on http://%s...", s.addr)
 
 	if err := s.http.ListenAndServe(); err != nil {
 		return fmt.Errorf("serve: %w", err)
@@ -94,7 +105,7 @@ func (s *Server) Start() error {
 
 // Stop stops the server.
 func (s *Server) Stop(ctx context.Context) error {
-	s.logger.Info("Stopping server ...")
+	s.log.Info("Stopping server ...")
 
 	if err := s.http.Shutdown(ctx); err != nil {
 		return fmt.Errorf("shutdown: %w", err)

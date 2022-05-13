@@ -44,6 +44,142 @@ const docTemplate = `{
                 }
             }
         },
+        "/decks": {
+            "post": {
+                "description": "creates a new full or partial deck of cards given an optional list of codes",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "deck"
+                ],
+                "summary": "creates a new deck of cards",
+                "parameters": [
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": "AS, 2C, 3D, 4H, 5S",
+                        "description": "list of codes",
+                        "name": "codes",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/http.DeckClosed"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/http.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/decks/{id}": {
+            "get": {
+                "description": "opens a deck of cards given an id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "deck"
+                ],
+                "summary": "opens a deck of cards",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "9302b603-13bb-5275-a3b9-5fcefafa34e0",
+                        "description": "id of deck",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/http.DeckOpened"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/http.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/decks/{id}/draw": {
+            "get": {
+                "description": "draws cards from a deck of cards given an id and the number of cards",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "deck"
+                ],
+                "summary": "draws cards from a deck of cards",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "9302b603-13bb-5275-a3b9-5fcefafa34e0",
+                        "description": "id of deck",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "example": 5,
+                        "description": "number of cards",
+                        "name": "num",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/http.Card"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/http.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/version": {
             "get": {
                 "description": "checks the server's version",
@@ -53,7 +189,7 @@ const docTemplate = `{
                 "tags": [
                     "core"
                 ],
-                "summary": "Health Check",
+                "summary": "Version",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -79,6 +215,75 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "revision": {
+                    "type": "string"
+                }
+            }
+        },
+        "http.Card": {
+            "description": "represents a card",
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "example": "AS"
+                },
+                "suit": {
+                    "type": "string",
+                    "example": "SPADES"
+                },
+                "value": {
+                    "type": "string",
+                    "example": "ACE"
+                }
+            }
+        },
+        "http.DeckClosed": {
+            "description": "represents a closed deck of cards",
+            "type": "object",
+            "properties": {
+                "deck_id": {
+                    "type": "string",
+                    "example": "f6afe993-9847-508e-b206-2487f1ef5a3c"
+                },
+                "remaining": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "shuffled": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "http.DeckOpened": {
+            "description": "represents a opened deck of cards",
+            "type": "object",
+            "properties": {
+                "cards": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/http.Card"
+                    }
+                },
+                "deck_id": {
+                    "type": "string",
+                    "example": "f6afe993-9847-508e-b206-2487f1ef5a3c"
+                },
+                "remaining": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "shuffled": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "http.Error": {
+            "description": "defines the structure for a failed response",
+            "type": "object",
+            "properties": {
+                "error": {
                     "type": "string"
                 }
             }
