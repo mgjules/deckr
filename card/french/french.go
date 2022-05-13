@@ -2,6 +2,7 @@ package french
 
 import "github.com/mgjules/deckr/card"
 
+// Ranks
 const (
 	ace   card.Rank = "ACE"
 	two   card.Rank = "2"
@@ -18,7 +19,18 @@ const (
 	king  card.Rank = "KING"
 )
 
-// Ranks represents the french ranks.
+// Suits
+const (
+	spades   card.Suit = "SPADES"   // ♠
+	diamonds card.Suit = "DIAMONDS" // ♦
+	clubs    card.Suit = "CLUBS"    // ♣
+	hearts   card.Suit = "HEARTS"   // ♥
+)
+
+// Composition returns the french deck composition.
 // NOTE: Order is important here.
 // No joker in this deck.
-var Ranks = card.Ranks{ace, two, three, four, five, six, seven, eight, nine, ten, jack, queen, king}
+var Composition = card.NewComposition(
+	card.Ranks{ace, two, three, four, five, six, seven, eight, nine, ten, jack, queen, king},
+	card.Suits{spades, diamonds, clubs, hearts},
+)

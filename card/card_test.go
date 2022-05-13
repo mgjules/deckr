@@ -12,7 +12,7 @@ import (
 
 var _ = Describe("Card", func() {
 	Describe("Creating a list of cards", func() {
-		Context("from valid list of french ranks and suits", func() {
+		Context("from valid list of french composition", func() {
 			type expected struct {
 				Cards []struct {
 					Rank string `json:"rank"`
@@ -21,12 +21,11 @@ var _ = Describe("Card", func() {
 				} `json:"cards"`
 			}
 
-			ranks := french.Ranks
-			suits := french.Suits
+			comp := french.Composition
 
 			Context("and with no codes", func() {
 				It("should return back a full list of cards in the correct order", func() {
-					cards, err := card.NewCards(ranks, suits)
+					cards, err := card.NewCards(comp)
 					Expect(err).ToNot(HaveOccurred())
 					Expect(cards).To(HaveLen(52))
 
@@ -52,7 +51,7 @@ var _ = Describe("Card", func() {
 				Expect(err).ToNot(HaveOccurred())
 
 				It("should return back a partial list of cards in same order as codes", func() {
-					cards, err := card.NewCards(ranks, suits, codes...)
+					cards, err := card.NewCards(comp, codes...)
 					Expect(err).ToNot(HaveOccurred())
 					Expect(cards).To(HaveLen(5))
 

@@ -10,7 +10,7 @@ import (
 var _ = Describe("Rank", func() {
 	Describe("Getting rank from code", func() {
 		Context("from valid list of french ranks", func() {
-			ranks := french.Ranks
+			ranks := french.Composition.Ranks()
 
 			Context("and a valid code", func() {
 				code, err := card.NewCode("AS")
@@ -19,7 +19,7 @@ var _ = Describe("Rank", func() {
 				It("should return back a valid rank", func() {
 					r, ok := ranks.RankFromCode(*code)
 					Expect(ok).To(BeTrue())
-					Expect(r).To(Equal(french.Ranks[0]))
+					Expect(r).To(Equal(ranks[0]))
 				})
 			})
 

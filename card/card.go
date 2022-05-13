@@ -37,18 +37,18 @@ func (c Card) Code() Code {
 
 // NewCards returns a collection of cards
 // using the given ranks, suits and codes.
-func NewCards(rs Ranks, ss Suits, codes ...Code) ([]Card, error) {
+func NewCards(comp Composition, codes ...Code) ([]Card, error) {
 	var cards []Card
 
 	// Partial cards using codes.
 	if len(codes) > 0 {
 		for _, c := range codes {
-			r, ok := rs.RankFromCode(c)
+			r, ok := comp.Ranks().RankFromCode(c)
 			if !ok {
 				return nil, fmt.Errorf("card code '%s' has an invalid rank", c)
 			}
 
-			s, ok := ss.SuitFromCode(c)
+			s, ok := comp.Suits().SuitFromCode(c)
 			if !ok {
 				return nil, fmt.Errorf("card code '%s' has an invalid suit", c)
 			}
@@ -60,8 +60,8 @@ func NewCards(rs Ranks, ss Suits, codes ...Code) ([]Card, error) {
 	}
 
 	// Full cards.
-	for _, s := range ss.Suits() {
-		for _, r := range rs.Ranks() {
+	for _, s := range comp.Suits() {
+		for _, r := range comp.Ranks() {
 			c, err := NewCodeFromRankSuit(r, s)
 			if err != nil {
 				return nil, fmt.Errorf("new code: %w", err)

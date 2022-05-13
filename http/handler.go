@@ -73,7 +73,7 @@ func (s *Server) handleCreateDeck() gin.HandlerFunc {
 			return
 		}
 
-		cards, err := card.NewCards(french.Ranks, french.Suits, codes...)
+		cards, err := card.NewCards(french.Composition, codes...)
 		if err != nil {
 			s.log.ErrorfContext(c, "new cards: %v", err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})

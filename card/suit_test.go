@@ -10,7 +10,7 @@ import (
 var _ = Describe("Suit", func() {
 	Describe("Getting suit from code", func() {
 		Context("from valid list of french suits", func() {
-			suits := french.Suits
+			suits := french.Composition.Suits()
 
 			Context("and a valid code", func() {
 				code, err := card.NewCode("AS")
@@ -19,7 +19,7 @@ var _ = Describe("Suit", func() {
 				It("should return back a valid suit", func() {
 					r, ok := suits.SuitFromCode(*code)
 					Expect(ok).To(BeTrue())
-					Expect(r).To(Equal(french.Suits[0]))
+					Expect(r).To(Equal(suits[0]))
 				})
 			})
 

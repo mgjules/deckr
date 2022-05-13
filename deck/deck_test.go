@@ -10,11 +10,10 @@ import (
 
 var _ = Describe("Deck", func() {
 	Describe("Shuffling a deck of french cards", func() {
-		ranks := french.Ranks
-		suits := french.Suits
+		comp := french.Composition
 
 		Context("which is full", func() {
-			cards, err := card.NewCards(ranks, suits)
+			cards, err := card.NewCards(comp)
 			Expect(err).ToNot(HaveOccurred())
 
 			var original []card.Card
@@ -37,7 +36,7 @@ var _ = Describe("Deck", func() {
 			codes, err := card.NewCodes("AS", "KD", "AC", "2C", "KH")
 			Expect(err).ToNot(HaveOccurred())
 
-			cards, err := card.NewCards(ranks, suits, codes...)
+			cards, err := card.NewCards(comp, codes...)
 			Expect(err).ToNot(HaveOccurred())
 
 			var original []card.Card
@@ -58,11 +57,10 @@ var _ = Describe("Deck", func() {
 	})
 
 	Describe("Drawing cards from a deck of french cards", func() {
-		ranks := french.Ranks
-		suits := french.Suits
+		comp := french.Composition
 
 		Context("which is full", func() {
-			cards, err := card.NewCards(ranks, suits)
+			cards, err := card.NewCards(comp)
 			Expect(err).ToNot(HaveOccurred())
 
 			deck, err := deck.New(deck.WithCards(cards...))
@@ -92,7 +90,7 @@ var _ = Describe("Deck", func() {
 			codes, err := card.NewCodes("AS", "KD", "AC", "2C", "KH")
 			Expect(err).ToNot(HaveOccurred())
 
-			cards, err := card.NewCards(ranks, suits, codes...)
+			cards, err := card.NewCards(comp, codes...)
 			Expect(err).ToNot(HaveOccurred())
 
 			deck, err := deck.New(deck.WithCards(cards...))

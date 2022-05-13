@@ -25,7 +25,7 @@ var _ = Describe("Code", func() {
 		})
 
 		Context("with a valid french rank and suit", func() {
-			c, err := card.NewCodeFromRankSuit(french.Ranks[0], french.Suits[0])
+			c, err := card.NewCodeFromRankSuit(french.Composition.Ranks()[0], french.Composition.Suits()[0])
 			Expect(err).ToNot(HaveOccurred())
 
 			It("should print back a valid code", func() {
