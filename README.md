@@ -1,4 +1,4 @@
-# deckr
+# deckr 🃏
 
 [![Go Doc](https://img.shields.io/badge/godoc-reference-blue.svg?style=for-the-badge)](https://godoc.org/github.com/mgjules/deckr)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=for-the-badge)](https://conventionalcommits.org)
@@ -9,7 +9,7 @@ Deckr provides a REST API to simulate a deck of cards.
 
 ## Contents
 
-- [deckr](#deckr)
+- [deckr 🃏](#deckr-)
   - [Contents](#contents)
   - [Requirements](#requirements)
   - [Mage Targets](#mage-targets)
