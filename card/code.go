@@ -2,8 +2,7 @@ package card
 
 import (
 	"fmt"
-
-	"github.com/hashicorp/hcl/hcl/strconv"
+	"strconv"
 )
 
 // Code represents a card code.
