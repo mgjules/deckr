@@ -5,7 +5,6 @@ env:
 before:
   hooks:
     - mage -v tidy
-    - mage -v vet
     - mage -v lint
     - mage -v testRace
 builds:
