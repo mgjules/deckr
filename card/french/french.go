@@ -3,24 +3,24 @@ package french
 import "github.com/mgjules/deckr/card"
 
 // Ranks
-const (
-	ace   card.Rank = "ACE"
-	two   card.Rank = "2"
-	three card.Rank = "3"
-	four  card.Rank = "4"
-	five  card.Rank = "5"
-	six   card.Rank = "6"
-	seven card.Rank = "7"
-	eight card.Rank = "8"
-	nine  card.Rank = "9"
-	ten   card.Rank = "10"
-	jack  card.Rank = "JACK"
-	queen card.Rank = "QUEEN"
-	king  card.Rank = "KING"
+var (
+	ace   = card.NewRank("ACE", "A")
+	two   = card.NewRank("2", "2")
+	three = card.NewRank("3", "3")
+	four  = card.NewRank("4", "4")
+	five  = card.NewRank("5", "5")
+	six   = card.NewRank("6", "6")
+	seven = card.NewRank("7", "7")
+	eight = card.NewRank("8", "8")
+	nine  = card.NewRank("9", "9")
+	ten   = card.NewRank("10", "T")
+	jack  = card.NewRank("JACK", "J")
+	queen = card.NewRank("QUEEN", "Q")
+	king  = card.NewRank("KING", "K")
 )
 
 // Suits
-const (
+var (
 	spades   card.Suit = "SPADES"   // ♠
 	diamonds card.Suit = "DIAMONDS" // ♦
 	clubs    card.Suit = "CLUBS"    // ♣

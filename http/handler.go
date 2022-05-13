@@ -94,7 +94,7 @@ func (s *Server) handleCreateDeck() gin.HandlerFunc {
 		rd.Shuffled = d.IsShuffled()
 		for _, card := range d.Cards() {
 			rd.Cards = append(rd.Cards, repo.Card{
-				Rank: card.Rank().String(),
+				Rank: repo.Rank{Name: card.Rank().String(), Code: card.Rank().Code()},
 				Suit: card.Suit().String(),
 				Code: card.Code().String(),
 			})
@@ -157,7 +157,7 @@ func (s *Server) handleOpenDeck() gin.HandlerFunc {
 		d.Remaining = len(rd.Cards)
 		for _, card := range rd.Cards {
 			d.Cards = append(d.Cards, Card{
-				Value: card.Rank,
+				Value: card.Rank.Name,
 				Suit:  card.Suit,
 				Code:  card.Code,
 			})
@@ -214,7 +214,7 @@ func (s *Server) handleDrawCards() gin.HandlerFunc {
 
 		var cc []card.Card
 		for _, rc := range rd.Cards {
-			rank := card.Rank(rc.Rank)
+			rank := card.NewRank(rc.Rank.Name, rc.Rank.Code)
 			suit := card.Suit(rc.Suit)
 
 			var code *card.Code
@@ -258,7 +258,7 @@ func (s *Server) handleDrawCards() gin.HandlerFunc {
 		rd.Cards = []repo.Card{}
 		for _, c := range d.Cards() {
 			rd.Cards = append(rd.Cards, repo.Card{
-				Rank: c.Rank().String(),
+				Rank: repo.Rank{Name: c.Rank().String(), Code: c.Rank().Code()},
 				Suit: c.Suit().String(),
 				Code: c.Code().String(),
 			})

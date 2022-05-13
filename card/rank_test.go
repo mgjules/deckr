@@ -19,7 +19,7 @@ var _ = Describe("Rank", func() {
 				It("should return back a valid rank", func() {
 					r, ok := ranks.RankFromCode(*code)
 					Expect(ok).To(BeTrue())
-					Expect(r).To(Equal(ranks[0]))
+					Expect(*r).To(Equal(ranks[0]))
 				})
 			})
 

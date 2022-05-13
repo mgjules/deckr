@@ -21,17 +21,17 @@ func NewCard(r Rank, s Suit, c Code) *Card {
 }
 
 // Rank returns the rank of the card.
-func (c Card) Rank() Rank {
+func (c *Card) Rank() Rank {
 	return c.rank
 }
 
 // Suit returns the suit of the card.
-func (c Card) Suit() Suit {
+func (c *Card) Suit() Suit {
 	return c.suit
 }
 
 // Code returns the code of the card.
-func (c Card) Code() Code {
+func (c *Card) Code() Code {
 	return c.code
 }
 
@@ -53,7 +53,7 @@ func NewCards(comp Composition, codes ...Code) ([]Card, error) {
 				return nil, fmt.Errorf("card code '%s' has an invalid suit", c)
 			}
 
-			cards = append(cards, *NewCard(r, s, c))
+			cards = append(cards, *NewCard(*r, s, c))
 		}
 
 		return cards, nil
