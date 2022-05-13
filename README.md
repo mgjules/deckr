@@ -17,6 +17,7 @@ Deckr provides a REST API to simulate a deck of cards.
       - [Generate docs](#generate-docs)
       - [Run test with race detector](#run-test-with-race-detector)
       - [Build deckr for MacOS M1](#build-deckr-for-macos-m1)
+  - [Install](#install)
   - [Usage](#usage)
     - [REST API server](#rest-api-server)
   - [API documentation](#api-documentation)
@@ -92,10 +93,28 @@ $ mage -v testRace
 $ mage -v build:macOSArm64
 ```
 
+## Install
+
+- You can install using the [latest released binary](https://github.com/mgjules/deckr/releases/latest).
+
+- **OR** using Go:
+
+    ```shell
+    $ go install github.com/mgjules/deckr@latest
+    ```
+
+- **OR** bulding from source:
+
+    Example (MacOS M1):
+
+    ```shell
+    $ mage -v build:macOSArm64
+    ```
+
 ## Usage
 
 ```shell
-$ ./deckr --help
+$ deckr --help
 ```
 
 ```
@@ -126,7 +145,7 @@ COPYRIGHT:
 ### REST API server
 
 ```shell
-$ ./deckr serve --help
+$ deckr serve --help
 ```
 
 ```
