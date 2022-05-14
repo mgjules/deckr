@@ -283,3 +283,91 @@ func (s *Server) handleDrawCards() gin.HandlerFunc {
 		c.JSON(http.StatusOK, Cards{cards})
 	}
 }
+
+// handleShuffleDeck godoc
+// @Summary      shuffle a deck of cards
+// @Description  shuffle a deck of cards given an id
+// @Tags         deck
+// @Produce      json
+// @Param        id   path      string  true  "id of deck"  example(9302b603-13bb-5275-a3b9-5fcefafa34e0)
+// @Success      200  {string}  deck    shuffled
+// @Failure      400  {object}  http.Error
+// @Failure      404  {object}  http.Error
+// @Failure      500  {object}  http.Error
+// @Router       /decks/{id}/shuffle [post]
+func (s *Server) handleShuffleDeck() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id := c.Param("id")
+		if _, err := uuid.FromString(id); err != nil {
+			s.log.ErrorfContext(c, "parse id: %v", err)
+			c.AbortWithStatusJSON(http.StatusBadRequest, Error{"invalid or missing id"})
+
+			return
+		}
+
+		rd, err := s.repo.Get(c, id)
+		if err != nil {
+			s.log.ErrorfContext(c, "get deck: %v", err)
+
+			if errors.Is(err, inmemory.ErrDeckNotFound) {
+				c.AbortWithStatusJSON(http.StatusNotFound, Error{inmemory.ErrDeckNotFound.Error()})
+
+				return
+			}
+
+			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
+
+			return
+		}
+
+		var cc []card.Card
+		for _, rc := range rd.Cards {
+			rank := card.NewRank(rc.Rank.Name, rc.Rank.Code)
+			suit := card.NewSuit(rc.Suit.Name, rc.Suit.Code)
+
+			var code *card.Code
+			code, err = card.NewCode(rc.Code)
+			if err != nil {
+				s.log.ErrorfContext(c, "new code: %v", err)
+
+				continue
+			}
+
+			cc = append(cc, *card.NewCard(rank, suit, *code))
+		}
+
+		d, err := deck.New(
+			deck.WithID(rd.ID),
+			deck.WithShuffled(rd.Shuffled),
+			deck.WithCards(cc...),
+		)
+		if err != nil {
+			s.log.ErrorfContext(c, "new deck: %v", err)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
+
+			return
+		}
+
+		d.Shuffle()
+
+		rd.Shuffled = d.IsShuffled()
+
+		rd.Cards = []repo.Card{}
+		for _, c := range d.Cards() {
+			rd.Cards = append(rd.Cards, repo.Card{
+				Rank: repo.Rank{Name: c.Rank().String(), Code: c.Rank().Code()},
+				Suit: repo.Suit{Name: c.Suit().String(), Code: c.Suit().Code()},
+				Code: c.Code().String(),
+			})
+		}
+
+		if err := s.repo.Save(c, rd); err != nil {
+			s.log.ErrorfContext(c, "save deck: %v", err)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
+
+			return
+		}
+
+		c.JSON(http.StatusOK, Success{"deck shuffled"})
+	}
+}

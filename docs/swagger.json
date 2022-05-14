@@ -183,6 +183,54 @@
                 }
             }
         },
+        "/decks/{id}/shuffle": {
+            "post": {
+                "description": "shuffle a deck of cards given an id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "deck"
+                ],
+                "summary": "shuffle a deck of cards",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "9302b603-13bb-5275-a3b9-5fcefafa34e0",
+                        "description": "id of deck",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/http.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/http.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/version": {
             "get": {
                 "description": "checks the server's version",

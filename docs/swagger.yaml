@@ -193,6 +193,38 @@ paths:
       summary: draws cards from a deck of cards
       tags:
       - deck
+  /decks/{id}/shuffle:
+    post:
+      description: shuffle a deck of cards given an id
+      parameters:
+      - description: id of deck
+        example: 9302b603-13bb-5275-a3b9-5fcefafa34e0
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/http.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.Error'
+      summary: shuffle a deck of cards
+      tags:
+      - deck
   /version:
     get:
       description: checks the server's version
