@@ -89,7 +89,6 @@ func (s *Server) handleCreateDeck() gin.HandlerFunc {
 		}
 
 		rd := DomainDeckToRepoDeck(d)
-
 		if err := s.repo.Save(c, rd); err != nil {
 			s.log.Errorf("save deck: %v", err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
