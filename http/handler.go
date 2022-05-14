@@ -88,7 +88,7 @@ func (s *Server) handleCreateDeck() gin.HandlerFunc {
 			return
 		}
 
-		rd := DomainDeckToRepo(d)
+		rd := DomainDeckToRepoDeck(d)
 
 		if err := s.repo.Save(c, rd); err != nil {
 			s.log.Errorf("save deck: %v", err)
@@ -213,8 +213,7 @@ func (s *Server) handleDrawCards() gin.HandlerFunc {
 			return
 		}
 
-		rd = DomainDeckToRepo(d)
-
+		rd = DomainDeckToRepoDeck(d)
 		if err := s.repo.Save(c, rd); err != nil {
 			s.log.Errorf("save deck: %v", err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
@@ -274,8 +273,7 @@ func (s *Server) handleShuffleDeck() gin.HandlerFunc {
 
 		d.Shuffle()
 
-		rd = DomainDeckToRepo(d)
-
+		rd = DomainDeckToRepoDeck(d)
 		if err := s.repo.Save(c, rd); err != nil {
 			s.log.Errorf("save deck: %v", err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})

@@ -33,8 +33,8 @@ func DomainDeckToDeckClosed(d *deck.Deck) *DeckClosed {
 	return &dc
 }
 
-// DomainDeckToRepo transforms a domain deck to a repo deck.
-func DomainDeckToRepo(d *deck.Deck) *repo.Deck {
+// DomainDeckToRepoDeck transforms a domain deck to a repo deck.
+func DomainDeckToRepoDeck(d *deck.Deck) *repo.Deck {
 	var rd repo.Deck
 	rd.ID = d.ID()
 	rd.Shuffled = d.IsShuffled()
