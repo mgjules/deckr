@@ -1,5 +1,7 @@
 package http
 
+import "github.com/mgjules/deckr/card"
+
 // Card represents a card.
 // @Description  represents a card
 type Card struct {
@@ -12,4 +14,18 @@ type Card struct {
 // @Description  represents a collection of cards
 type Cards struct {
 	Cards []Card `json:"cards"`
+}
+
+// DomainCardsToCards transforms domain cards to Cards.
+func DomainCardsToCards(dc []card.Card) *Cards {
+	var c Cards
+	for _, card := range dc {
+		c.Cards = append(c.Cards, Card{
+			Value: card.Rank().String(),
+			Suit:  card.Suit().String(),
+			Code:  card.Code().String(),
+		})
+	}
+
+	return &c
 }

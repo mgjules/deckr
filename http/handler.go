@@ -10,7 +10,6 @@ import (
 	"github.com/mgjules/deckr/card/french"
 	"github.com/mgjules/deckr/deck"
 	"github.com/mgjules/deckr/docs"
-	"github.com/mgjules/deckr/repo"
 	"github.com/mgjules/deckr/repo/inmemory"
 	"github.com/satori/uuid"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -89,29 +88,18 @@ func (s *Server) handleCreateDeck() gin.HandlerFunc {
 			return
 		}
 
-		var rd repo.Deck
-		rd.ID = d.ID()
-		rd.Shuffled = d.IsShuffled()
-		for _, card := range d.Cards() {
-			rd.Cards = append(rd.Cards, repo.Card{
-				Rank: repo.Rank{Name: card.Rank().String(), Code: card.Rank().Code()},
-				Suit: repo.Suit{Name: card.Suit().String(), Code: card.Suit().Code()},
-				Code: card.Code().String(),
-			})
-		}
+		rd := DomainDeckToRepo(d)
 
-		if err := s.repo.Save(c, &rd); err != nil {
+		if err := s.repo.Save(c, rd); err != nil {
 			s.log.Errorf("save deck: %v", err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
 
 			return
 		}
 
-		c.JSON(http.StatusCreated, DeckClosed{
-			ID:        d.ID(),
-			Shuffled:  d.IsShuffled(),
-			Remaining: d.Remaining(),
-		})
+		dc := DomainDeckToDeckClosed(d)
+
+		c.JSON(http.StatusCreated, dc)
 	}
 }
 
@@ -151,19 +139,9 @@ func (s *Server) handleOpenDeck() gin.HandlerFunc {
 			return
 		}
 
-		var d DeckOpened
-		d.ID = rd.ID
-		d.Shuffled = rd.Shuffled
-		d.Remaining = len(rd.Cards)
-		for _, card := range rd.Cards {
-			d.Cards = append(d.Cards, Card{
-				Value: card.Rank.Name,
-				Suit:  card.Suit.Name,
-				Code:  card.Code,
-			})
-		}
+		do := RepoDeckToDeckOpened(rd)
 
-		c.JSON(http.StatusOK, d)
+		c.JSON(http.StatusOK, do)
 	}
 }
 
@@ -212,29 +190,9 @@ func (s *Server) handleDrawCards() gin.HandlerFunc {
 			return
 		}
 
-		var cc []card.Card
-		for _, rc := range rd.Cards {
-			rank := card.NewRank(rc.Rank.Name, rc.Rank.Code)
-			suit := card.NewSuit(rc.Suit.Name, rc.Suit.Code)
-
-			var code *card.Code
-			code, err = card.NewCode(rc.Code)
-			if err != nil {
-				s.log.Errorf("new code: %v", err)
-
-				continue
-			}
-
-			cc = append(cc, *card.NewCard(rank, suit, *code))
-		}
-
-		d, err := deck.New(
-			deck.WithID(rd.ID),
-			deck.WithShuffled(rd.Shuffled),
-			deck.WithCards(cc...),
-		)
+		d, err := RepoDeckToDomainDeck(rd)
 		if err != nil {
-			s.log.Errorf("new deck: %v", err)
+			s.log.Error(err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
 
 			return
@@ -255,14 +213,7 @@ func (s *Server) handleDrawCards() gin.HandlerFunc {
 			return
 		}
 
-		rd.Cards = []repo.Card{}
-		for _, c := range d.Cards() {
-			rd.Cards = append(rd.Cards, repo.Card{
-				Rank: repo.Rank{Name: c.Rank().String(), Code: c.Rank().Code()},
-				Suit: repo.Suit{Name: c.Suit().String(), Code: c.Suit().Code()},
-				Code: c.Code().String(),
-			})
-		}
+		rd = DomainDeckToRepo(d)
 
 		if err := s.repo.Save(c, rd); err != nil {
 			s.log.Errorf("save deck: %v", err)
@@ -271,16 +222,9 @@ func (s *Server) handleDrawCards() gin.HandlerFunc {
 			return
 		}
 
-		var cards []Card
-		for _, c := range drawn {
-			cards = append(cards, Card{
-				Value: c.Rank().String(),
-				Suit:  c.Suit().String(),
-				Code:  c.Code().String(),
-			})
-		}
+		cards := DomainCardsToCards(drawn)
 
-		c.JSON(http.StatusOK, Cards{cards})
+		c.JSON(http.StatusOK, cards)
 	}
 }
 
@@ -320,29 +264,9 @@ func (s *Server) handleShuffleDeck() gin.HandlerFunc {
 			return
 		}
 
-		var cc []card.Card
-		for _, rc := range rd.Cards {
-			rank := card.NewRank(rc.Rank.Name, rc.Rank.Code)
-			suit := card.NewSuit(rc.Suit.Name, rc.Suit.Code)
-
-			var code *card.Code
-			code, err = card.NewCode(rc.Code)
-			if err != nil {
-				s.log.Errorf("new code: %v", err)
-
-				continue
-			}
-
-			cc = append(cc, *card.NewCard(rank, suit, *code))
-		}
-
-		d, err := deck.New(
-			deck.WithID(rd.ID),
-			deck.WithShuffled(rd.Shuffled),
-			deck.WithCards(cc...),
-		)
+		d, err := RepoDeckToDomainDeck(rd)
 		if err != nil {
-			s.log.Errorf("new deck: %v", err)
+			s.log.Error(err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
 
 			return
@@ -350,16 +274,7 @@ func (s *Server) handleShuffleDeck() gin.HandlerFunc {
 
 		d.Shuffle()
 
-		rd.Shuffled = d.IsShuffled()
-
-		rd.Cards = []repo.Card{}
-		for _, c := range d.Cards() {
-			rd.Cards = append(rd.Cards, repo.Card{
-				Rank: repo.Rank{Name: c.Rank().String(), Code: c.Rank().Code()},
-				Suit: repo.Suit{Name: c.Suit().String(), Code: c.Suit().Code()},
-				Code: c.Code().String(),
-			})
-		}
+		rd = DomainDeckToRepo(d)
 
 		if err := s.repo.Save(c, rd); err != nil {
 			s.log.Errorf("save deck: %v", err)
