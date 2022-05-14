@@ -216,7 +216,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/http.Success"
                         }
                     },
                     "400": {
@@ -356,6 +356,15 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "http.Success": {
+            "description": "defines the structure for a successful response",
+            "type": "object",
+            "properties": {
+                "message": {
                     "type": "string"
                 }
             }

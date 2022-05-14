@@ -67,6 +67,12 @@ definitions:
       error:
         type: string
     type: object
+  http.Success:
+    description: defines the structure for a successful response
+    properties:
+      message:
+        type: string
+    type: object
 info:
   contact:
     email: julesmichaelgiovanni@gmail.com
@@ -209,7 +215,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
+            $ref: '#/definitions/http.Success'
         "400":
           description: Bad Request
           schema:

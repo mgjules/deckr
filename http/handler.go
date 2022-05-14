@@ -232,7 +232,7 @@ func (s *Server) handleDrawCards() gin.HandlerFunc {
 // @Tags         deck
 // @Produce      json
 // @Param        id   path      string  true  "id of deck"  example(9302b603-13bb-5275-a3b9-5fcefafa34e0)
-// @Success      200  {string}  deck    shuffled
+// @Success      200  {object}  http.Success
 // @Failure      400  {object}  http.Error
 // @Failure      404  {object}  http.Error
 // @Failure      500  {object}  http.Error
