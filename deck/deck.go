@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/mgjules/deckr/card"
-	uuid "github.com/satori/go.uuid"
+	"github.com/satori/uuid"
 )
 
 // ErrNotEnoughCards is the error returned when there are not enough cards in the deck.

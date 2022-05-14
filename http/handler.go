@@ -6,13 +6,13 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gofrs/uuid"
 	"github.com/mgjules/deckr/card"
 	"github.com/mgjules/deckr/card/french"
 	"github.com/mgjules/deckr/deck"
 	"github.com/mgjules/deckr/docs"
 	"github.com/mgjules/deckr/repo"
 	"github.com/mgjules/deckr/repo/inmemory"
+	"github.com/satori/uuid"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
@@ -67,7 +67,7 @@ func (s *Server) handleCreateDeck() gin.HandlerFunc {
 
 		codes, err := card.NewCodes(cc...)
 		if err != nil {
-			s.log.ErrorfContext(c, "new codes: %v", err)
+			s.log.Errorf("new codes: %v", err)
 			c.AbortWithStatusJSON(http.StatusBadRequest, Error{err.Error()})
 
 			return
@@ -75,7 +75,7 @@ func (s *Server) handleCreateDeck() gin.HandlerFunc {
 
 		cards, err := card.NewCards(french.Composition, codes...)
 		if err != nil {
-			s.log.ErrorfContext(c, "new cards: %v", err)
+			s.log.Errorf("new cards: %v", err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
 
 			return
@@ -83,7 +83,7 @@ func (s *Server) handleCreateDeck() gin.HandlerFunc {
 
 		d, err := deck.New(deck.WithCards(cards...))
 		if err != nil {
-			s.log.ErrorfContext(c, "new deck: %v", err)
+			s.log.Errorf("new deck: %v", err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
 
 			return
@@ -101,7 +101,7 @@ func (s *Server) handleCreateDeck() gin.HandlerFunc {
 		}
 
 		if err := s.repo.Save(c, &rd); err != nil {
-			s.log.ErrorfContext(c, "save deck: %v", err)
+			s.log.Errorf("save deck: %v", err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
 
 			return
@@ -130,7 +130,7 @@ func (s *Server) handleOpenDeck() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id := c.Param("id")
 		if _, err := uuid.FromString(id); err != nil {
-			s.log.ErrorfContext(c, "parse id: %v", err)
+			s.log.Errorf("parse id: %v", err)
 			c.AbortWithStatusJSON(http.StatusBadRequest, Error{"invalid or missing id"})
 
 			return
@@ -138,7 +138,7 @@ func (s *Server) handleOpenDeck() gin.HandlerFunc {
 
 		rd, err := s.repo.Get(c, id)
 		if err != nil {
-			s.log.ErrorfContext(c, "open deck: %v", err)
+			s.log.Errorf("open deck: %v", err)
 
 			if errors.Is(err, inmemory.ErrDeckNotFound) {
 				c.AbortWithStatusJSON(http.StatusNotFound, Error{inmemory.ErrDeckNotFound.Error()})
@@ -183,7 +183,7 @@ func (s *Server) handleDrawCards() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id := c.Param("id")
 		if _, err := uuid.FromString(id); err != nil {
-			s.log.ErrorfContext(c, "parse id: %v", err)
+			s.log.Errorf("parse id: %v", err)
 			c.AbortWithStatusJSON(http.StatusBadRequest, Error{"invalid or missing id"})
 
 			return
@@ -191,7 +191,7 @@ func (s *Server) handleDrawCards() gin.HandlerFunc {
 
 		num, err := strconv.Atoi(c.Query("num"))
 		if err != nil || num == 0 {
-			s.log.ErrorfContext(c, "parse num: %v", err)
+			s.log.Errorf("parse num: %v", err)
 			c.AbortWithStatusJSON(http.StatusBadRequest, Error{"invalid or missing num"})
 
 			return
@@ -199,7 +199,7 @@ func (s *Server) handleDrawCards() gin.HandlerFunc {
 
 		rd, err := s.repo.Get(c, id)
 		if err != nil {
-			s.log.ErrorfContext(c, "get deck: %v", err)
+			s.log.Errorf("get deck: %v", err)
 
 			if errors.Is(err, inmemory.ErrDeckNotFound) {
 				c.AbortWithStatusJSON(http.StatusNotFound, Error{inmemory.ErrDeckNotFound.Error()})
@@ -220,7 +220,7 @@ func (s *Server) handleDrawCards() gin.HandlerFunc {
 			var code *card.Code
 			code, err = card.NewCode(rc.Code)
 			if err != nil {
-				s.log.ErrorfContext(c, "new code: %v", err)
+				s.log.Errorf("new code: %v", err)
 
 				continue
 			}
@@ -234,7 +234,7 @@ func (s *Server) handleDrawCards() gin.HandlerFunc {
 			deck.WithCards(cc...),
 		)
 		if err != nil {
-			s.log.ErrorfContext(c, "new deck: %v", err)
+			s.log.Errorf("new deck: %v", err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
 
 			return
@@ -242,7 +242,7 @@ func (s *Server) handleDrawCards() gin.HandlerFunc {
 
 		drawn, err := d.Draw(num)
 		if err != nil {
-			s.log.ErrorfContext(c, "draw cards: %v", err)
+			s.log.Errorf("draw cards: %v", err)
 
 			if errors.Is(err, deck.ErrNotEnoughCards) {
 				c.AbortWithStatusJSON(http.StatusBadRequest, Error{deck.ErrNotEnoughCards.Error()})
@@ -265,7 +265,7 @@ func (s *Server) handleDrawCards() gin.HandlerFunc {
 		}
 
 		if err := s.repo.Save(c, rd); err != nil {
-			s.log.ErrorfContext(c, "save deck: %v", err)
+			s.log.Errorf("save deck: %v", err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
 
 			return
@@ -299,7 +299,7 @@ func (s *Server) handleShuffleDeck() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id := c.Param("id")
 		if _, err := uuid.FromString(id); err != nil {
-			s.log.ErrorfContext(c, "parse id: %v", err)
+			s.log.Errorf("parse id: %v", err)
 			c.AbortWithStatusJSON(http.StatusBadRequest, Error{"invalid or missing id"})
 
 			return
@@ -307,7 +307,7 @@ func (s *Server) handleShuffleDeck() gin.HandlerFunc {
 
 		rd, err := s.repo.Get(c, id)
 		if err != nil {
-			s.log.ErrorfContext(c, "get deck: %v", err)
+			s.log.Errorf("get deck: %v", err)
 
 			if errors.Is(err, inmemory.ErrDeckNotFound) {
 				c.AbortWithStatusJSON(http.StatusNotFound, Error{inmemory.ErrDeckNotFound.Error()})
@@ -328,7 +328,7 @@ func (s *Server) handleShuffleDeck() gin.HandlerFunc {
 			var code *card.Code
 			code, err = card.NewCode(rc.Code)
 			if err != nil {
-				s.log.ErrorfContext(c, "new code: %v", err)
+				s.log.Errorf("new code: %v", err)
 
 				continue
 			}
@@ -342,7 +342,7 @@ func (s *Server) handleShuffleDeck() gin.HandlerFunc {
 			deck.WithCards(cc...),
 		)
 		if err != nil {
-			s.log.ErrorfContext(c, "new deck: %v", err)
+			s.log.Errorf("new deck: %v", err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
 
 			return
@@ -362,7 +362,7 @@ func (s *Server) handleShuffleDeck() gin.HandlerFunc {
 		}
 
 		if err := s.repo.Save(c, rd); err != nil {
-			s.log.ErrorfContext(c, "save deck: %v", err)
+			s.log.Errorf("save deck: %v", err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
 
 			return

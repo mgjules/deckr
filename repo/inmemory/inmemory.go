@@ -30,7 +30,7 @@ func NewRepository(log *logger.Logger) *Repository {
 }
 
 // Get returns the deck with the given id.
-func (r *Repository) Get(ctx context.Context, id string) (*repo.Deck, error) {
+func (r *Repository) Get(_ context.Context, id string) (*repo.Deck, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -39,19 +39,19 @@ func (r *Repository) Get(ctx context.Context, id string) (*repo.Deck, error) {
 		return nil, fmt.Errorf("deck '%s': %w", id, ErrDeckNotFound)
 	}
 
-	r.log.DebugfContext(ctx, "get deck '%s'", d.ID)
+	r.log.Debugf("get deck '%s'", d.ID)
 
 	return d, nil
 }
 
 // Save saves the given deck.
-func (r *Repository) Save(ctx context.Context, d *repo.Deck) error {
+func (r *Repository) Save(_ context.Context, d *repo.Deck) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
 	r.items[d.ID] = d
 
-	r.log.DebugfContext(ctx, "saved deck '%s'", d.ID)
+	r.log.Debugf("saved deck '%s'", d.ID)
 
 	return nil
 }

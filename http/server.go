@@ -56,8 +56,8 @@ func NewServer(
 	}
 
 	desugared := logger.Desugar()
-	s.router.Use(ginzap.Ginzap(desugared.Logger, time.RFC3339, true))
-	s.router.Use(ginzap.RecoveryWithZap(desugared.Logger, true))
+	s.router.Use(ginzap.Ginzap(desugared, time.RFC3339, true))
+	s.router.Use(ginzap.RecoveryWithZap(desugared, true))
 
 	s.http = &http.Server{
 		Addr:              s.addr,

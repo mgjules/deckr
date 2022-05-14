@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/uptrace/opentelemetry-go-extra/otelzap"
 	"go.uber.org/zap"
 )
 
@@ -13,7 +12,7 @@ var Log *Logger
 
 // Logger is a simple wrapper around zap.SugaredLogger.
 type Logger struct {
-	*otelzap.SugaredLogger
+	*zap.SugaredLogger
 }
 
 // New creates a new Logger.
@@ -36,14 +35,12 @@ func New(debug bool) (*Logger, error) {
 		return nil, fmt.Errorf("new zap logger: %w", err)
 	}
 
-	otellogger := otelzap.New(logger)
-
-	Log = &Logger{otellogger.Sugar()}
+	Log = &Logger{logger.Sugar()}
 
 	return Log, nil
 }
 
 // Writer returns the logger's io.Writer.
 func (l *Logger) Writer() io.Writer {
-	return zap.NewStdLog(l.Desugar().Logger).Writer()
+	return zap.NewStdLog(l.Desugar()).Writer()
 }
