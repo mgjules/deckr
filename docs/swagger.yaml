@@ -77,7 +77,7 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   title: Deckr
-  version: v0.1.1
+  version: v0.1.2
 paths:
   /:
     get:
