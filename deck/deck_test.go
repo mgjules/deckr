@@ -93,23 +93,25 @@ var _ = Describe("Deck", func() {
 			cards, err := card.NewCards(comp, codes...)
 			Expect(err).ToNot(HaveOccurred())
 
-			deck, err := deck.New(deck.WithCards(cards...))
+			d, err := deck.New(deck.WithCards(cards...))
 			Expect(err).ToNot(HaveOccurred())
 			Expect(cards).To(HaveLen(5))
 
 			Context("with enough cards", func() {
 				It("should return the top cards in the stack", func() {
-					drawn, err := deck.Draw(3)
+					drawn, err := d.Draw(3)
 					Expect(err).ToNot(HaveOccurred())
 					Expect(drawn).To(HaveLen(3))
-					Expect(deck.Remaining()).To(Equal(2))
+					Expect(d.Remaining()).To(Equal(2))
 				})
 			})
 
 			Context("without enough cards", func() {
 				It("should return an error", func() {
-					_, err := deck.Draw(3)
-					Expect(err).To(HaveOccurred())
+					drawn, err := d.Draw(3)
+					Expect(err).To(MatchError(deck.ErrNotEnoughCards))
+					Expect(drawn).To(HaveLen(0))
+					Expect(d.Remaining()).To(Equal(2))
 				})
 			})
 		})

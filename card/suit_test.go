@@ -28,8 +28,9 @@ var _ = Describe("Suit", func() {
 				Expect(err).ToNot(HaveOccurred())
 
 				It("should not return any rank", func() {
-					_, ok := suits.SuitFromCode(*code)
+					s, ok := suits.SuitFromCode(*code)
 					Expect(ok).To(BeFalse())
+					Expect(s).To(BeNil())
 				})
 			})
 		})
