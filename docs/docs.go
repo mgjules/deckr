@@ -64,6 +64,16 @@ const docTemplate = `{
                         "description": "list of codes",
                         "name": "codes",
                         "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": "french, uno",
+                        "description": "composition of deck",
+                        "name": "comp",
+                        "in": "query"
                     }
                 ],
                 "responses": {

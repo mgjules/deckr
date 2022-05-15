@@ -6,6 +6,8 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mgjules/deckr/card"
+	"github.com/mgjules/deckr/composition"
 	"github.com/mgjules/deckr/deck"
 	"github.com/mgjules/deckr/docs"
 	"github.com/mgjules/deckr/repo/inmemory"
@@ -53,18 +55,30 @@ func (Server) handleSwagger() gin.HandlerFunc {
 // @Description  creates a new full or partial deck of cards given an optional list of codes
 // @Tags         deck
 // @Produce      json
-// @Param        codes  query     []string  false  "list of codes"  example(AS, 2C, 3D, 4H, 5S)
+// @Param        codes  query     []string  false  "list of codes"        example(AS, 2C, 3D, 4H, 5S)
+// @Param        comp   query     []string  false  "composition of deck"  example(french, uno)
 // @Success      201    {object}  http.DeckClosed
 // @Failure      400    {object}  http.Error
 // @Failure      500    {object}  http.Error
 // @Router       /decks [post]
 func (s *Server) handleCreateDeck() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		cc := c.QueryArray("codes")
+		comp := c.Query("comp")
+		codes := c.QueryArray("codes")
 
-		d, err := deck.New(deck.WithCodes(cc...))
+		d, err := deck.New(deck.WithComposition(comp), deck.WithCodes(codes...))
 		if err != nil {
 			s.log.Errorf("new deck: %v", err)
+
+			if errors.Is(err, composition.ErrUnknownComposition) ||
+				errors.Is(err, card.ErrInvalidCode) ||
+				errors.Is(err, card.ErrInvalidRank) ||
+				errors.Is(err, card.ErrInvalidSuit) {
+				c.AbortWithStatusJSON(http.StatusBadRequest, Error{err.Error()})
+
+				return
+			}
+
 			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
 
 			return

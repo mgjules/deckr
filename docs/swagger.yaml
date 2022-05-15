@@ -110,6 +110,13 @@ paths:
           type: string
         name: codes
         type: array
+      - description: composition of deck
+        example: french, uno
+        in: query
+        items:
+          type: string
+        name: comp
+        type: array
       produces:
       - application/json
       responses:
