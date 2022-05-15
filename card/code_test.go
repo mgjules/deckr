@@ -2,8 +2,7 @@ package card_test
 
 import (
 	"github.com/mgjules/deckr/card"
-	"github.com/mgjules/deckr/card/french"
-	"github.com/mgjules/deckr/json"
+	"github.com/mgjules/deckr/composition"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
@@ -25,7 +24,10 @@ var _ = Describe("Code", func() {
 		})
 
 		Context("with a valid french rank and suit", func() {
-			c, err := card.NewCodeFromRankSuit(french.Composition.Ranks()[0], french.Composition.Suits()[0])
+			comp, err := composition.ParseFromString(composition.French)
+			Expect(err).ToNot(HaveOccurred())
+
+			c, err := card.NewCodeFromRankSuit(comp.Ranks()[0], comp.Suits()[0])
 			Expect(err).ToNot(HaveOccurred())
 
 			It("should print back a valid code", func() {
@@ -52,42 +54,6 @@ var _ = Describe("Code", func() {
 
 			It("should return a valid list of codes", func() {
 				Expect(cc).To(Equal([]card.Code{*ak, *twos}))
-			})
-		})
-	})
-
-	Describe("Marshaling to json", func() {
-		Context("with a valid code string in response", func() {
-			code := "AK"
-
-			It("should return a valid code", func() {
-				type response struct {
-					Code card.Code `json:"code"`
-				}
-
-				c, err := card.NewCode(code)
-				Expect(err).ToNot(HaveOccurred())
-
-				resp, err := json.Marshal(response{Code: *c})
-				Expect(err).ToNot(HaveOccurred())
-				Expect(string(resp)).To(Equal(`{"code":"AK"}`))
-			})
-		})
-	})
-
-	Describe("Unmarshaling from json", func() {
-		Context("with a valid code string in request", func() {
-			raw := `{"code":"AK"}`
-
-			It("should return a valid code", func() {
-				type request struct {
-					Code card.Code `json:"code"`
-				}
-
-				var r request
-				err := json.Unmarshal([]byte(raw), &r)
-				Expect(err).ToNot(HaveOccurred())
-				Expect(r.Code.String()).To(Equal("AK"))
 			})
 		})
 	})

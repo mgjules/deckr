@@ -2,7 +2,7 @@ package card_test
 
 import (
 	"github.com/mgjules/deckr/card"
-	"github.com/mgjules/deckr/card/french"
+	"github.com/mgjules/deckr/composition"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
@@ -10,7 +10,10 @@ import (
 var _ = Describe("Suit", func() {
 	Describe("Getting suit from code", func() {
 		Context("from valid list of french suits", func() {
-			suits := french.Composition.Suits()
+			comp, err := composition.ParseFromString(composition.French)
+			Expect(err).ToNot(HaveOccurred())
+
+			suits := comp.Suits()
 
 			Context("and a valid code", func() {
 				code, err := card.NewCode("AS")

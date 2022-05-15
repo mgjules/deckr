@@ -2,7 +2,6 @@ package card
 
 import (
 	"fmt"
-	"strconv"
 )
 
 // Code represents a card code.
@@ -44,29 +43,6 @@ func (c Code) Rank() string {
 // Suit returns the suit.
 func (c Code) Suit() string {
 	return c.s
-}
-
-// MarshalJSON implements the json.Marshaler interface.
-func (c Code) MarshalJSON() ([]byte, error) {
-	return []byte(`"` + c.String() + `"`), nil
-}
-
-// UnmarshalJSON implements the json.Unmarshaler interface.
-func (c *Code) UnmarshalJSON(b []byte) error {
-	unquoted, err := strconv.Unquote(string(b))
-	if err != nil {
-		return fmt.Errorf("can't unquote '%s': %w", string(b), err)
-	}
-
-	code, err := NewCode(unquoted)
-	if err != nil {
-		return err
-	}
-
-	c.r = code.Rank()
-	c.s = code.Suit()
-
-	return nil
 }
 
 // NewCodes returns a collection of codes given a collection of string.

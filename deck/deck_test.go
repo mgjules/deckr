@@ -1,34 +1,95 @@
 package deck_test
 
 import (
+	"encoding/json"
+	"io/ioutil"
+
 	"github.com/mgjules/deckr/card"
-	"github.com/mgjules/deckr/card/french"
+	"github.com/mgjules/deckr/composition"
 	"github.com/mgjules/deckr/deck"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Deck", func() {
-	Describe("Shuffling a deck of french cards", func() {
-		comp := french.Composition
+const testdataDir = "testdata"
 
+var _ = Describe("Deck", func() {
+	Describe("Creating a deck", func() {
+		Context("from valid list of french cards", func() {
+			type expected struct {
+				Cards []struct {
+					Rank string `json:"rank"`
+					Suit string `json:"suit"`
+					Code string `json:"code"`
+				} `json:"cards"`
+			}
+
+			Context("and with no codes", func() {
+				It("should return back a full list of cards in the correct order", func() {
+					d, err := deck.New(deck.WithComposition(composition.French))
+					Expect(err).ToNot(HaveOccurred())
+					Expect(d.Remaining()).To(Equal(52))
+
+					raw, err := ioutil.ReadFile(testdataDir + "/full_french_cards.json")
+					Expect(err).ToNot(HaveOccurred())
+
+					var exp expected
+					err = json.Unmarshal(raw, &exp)
+					Expect(err).ToNot(HaveOccurred())
+
+					Expect(d.Remaining()).To(Equal(len(exp.Cards)))
+
+					for i, c := range d.Cards() {
+						Expect(c.Rank().String()).To(Equal(exp.Cards[i].Rank))
+						Expect(c.Suit().String()).To(Equal(exp.Cards[i].Suit))
+						Expect(c.Code().String()).To(Equal(exp.Cards[i].Code))
+					}
+				})
+			})
+
+			Context("and with specific codes", func() {
+				codes, err := card.NewCodes("AS", "KD", "AC", "2C", "KH")
+				Expect(err).ToNot(HaveOccurred())
+
+				It("should return back a partial list of cards in same order as codes", func() {
+					d, err := deck.New(deck.WithComposition(composition.French), deck.WithCodes(codes...))
+					Expect(err).ToNot(HaveOccurred())
+					Expect(d.Remaining()).To(Equal(5))
+
+					raw, err := ioutil.ReadFile(testdataDir + "/partial_french_cards.json")
+					Expect(err).ToNot(HaveOccurred())
+
+					var exp expected
+					err = json.Unmarshal(raw, &exp)
+					Expect(err).ToNot(HaveOccurred())
+
+					Expect(d.Remaining()).To(Equal(len(exp.Cards)))
+
+					for i, c := range d.Cards() {
+						Expect(c.Rank().String()).To(Equal(exp.Cards[i].Rank))
+						Expect(c.Suit().String()).To(Equal(exp.Cards[i].Suit))
+						Expect(c.Code().String()).To(Equal(exp.Cards[i].Code))
+					}
+				})
+			})
+		})
+	})
+
+	Describe("Shuffling a deck of french cards", func() {
 		Context("which is full", func() {
-			cards, err := card.NewCards(comp)
+			d, err := deck.New(deck.WithComposition(composition.French))
 			Expect(err).ToNot(HaveOccurred())
+			Expect(d.IsShuffled()).To(BeFalse())
 
 			var original []card.Card
-			original = append(original, cards...)
+			original = append(original, d.Cards()...)
 
 			It("should return a shuffled deck", func() {
-				deck, err := deck.New(deck.WithCards(cards...))
-				Expect(err).ToNot(HaveOccurred())
-				Expect(deck.IsShuffled()).To(BeFalse())
+				d.Shuffle()
 
-				deck.Shuffle()
-
-				Expect(deck.Remaining()).To(Equal(len(original)))
-				Expect(deck.Cards()).ToNot(Equal(original))
-				Expect(deck.IsShuffled()).To(BeTrue())
+				Expect(d.Remaining()).To(Equal(len(original)))
+				Expect(d.Cards()).ToNot(Equal(original))
+				Expect(d.IsShuffled()).To(BeTrue())
 			})
 		})
 
@@ -36,52 +97,44 @@ var _ = Describe("Deck", func() {
 			codes, err := card.NewCodes("AS", "KD", "AC", "2C", "KH")
 			Expect(err).ToNot(HaveOccurred())
 
-			cards, err := card.NewCards(comp, codes...)
+			d, err := deck.New(deck.WithComposition(composition.French), deck.WithCodes(codes...))
 			Expect(err).ToNot(HaveOccurred())
+			Expect(d.IsShuffled()).To(BeFalse())
 
 			var original []card.Card
-			original = append(original, cards...)
+			original = append(original, d.Cards()...)
 
 			It("should return a shuffled deck", func() {
-				deck, err := deck.New(deck.WithCards(cards...))
-				Expect(err).ToNot(HaveOccurred())
-				Expect(deck.IsShuffled()).To(BeFalse())
+				d.Shuffle()
 
-				deck.Shuffle()
-
-				Expect(deck.Cards()).To(HaveLen(len(original)))
-				Expect(deck.Cards()).ToNot(Equal(original))
-				Expect(deck.IsShuffled()).To(BeTrue())
+				Expect(d.Cards()).To(HaveLen(len(original)))
+				Expect(d.Cards()).ToNot(Equal(original))
+				Expect(d.IsShuffled()).To(BeTrue())
 			})
 		})
 	})
 
 	Describe("Drawing cards from a deck of french cards", func() {
-		comp := french.Composition
-
 		Context("which is full", func() {
-			cards, err := card.NewCards(comp)
+			d, err := deck.New(deck.WithComposition(composition.French))
 			Expect(err).ToNot(HaveOccurred())
-
-			deck, err := deck.New(deck.WithCards(cards...))
-			Expect(err).ToNot(HaveOccurred())
-			Expect(cards).To(HaveLen(52))
+			Expect(d.Remaining()).To(Equal(52))
 
 			Context("with enough cards", func() {
 				It("should return the top cards in the stack", func() {
-					drawn, err := deck.Draw(5)
+					drawn, err := d.Draw(5)
 					Expect(err).ToNot(HaveOccurred())
 					Expect(drawn).To(HaveLen(5))
-					Expect(deck.Remaining()).To(Equal(47))
+					Expect(d.Remaining()).To(Equal(47))
 				})
 			})
 
 			Context("with enough cards again", func() {
 				It("should return the top cards in the stack", func() {
-					drawn, err := deck.Draw(10)
+					drawn, err := d.Draw(10)
 					Expect(err).ToNot(HaveOccurred())
 					Expect(drawn).To(HaveLen(10))
-					Expect(deck.Remaining()).To(Equal(37))
+					Expect(d.Remaining()).To(Equal(37))
 				})
 			})
 		})
@@ -90,12 +143,9 @@ var _ = Describe("Deck", func() {
 			codes, err := card.NewCodes("AS", "KD", "AC", "2C", "KH")
 			Expect(err).ToNot(HaveOccurred())
 
-			cards, err := card.NewCards(comp, codes...)
+			d, err := deck.New(deck.WithComposition(composition.French), deck.WithCodes(codes...))
 			Expect(err).ToNot(HaveOccurred())
-
-			d, err := deck.New(deck.WithCards(cards...))
-			Expect(err).ToNot(HaveOccurred())
-			Expect(cards).To(HaveLen(5))
+			Expect(d.Remaining()).To(Equal(5))
 
 			Context("with enough cards", func() {
 				It("should return the top cards in the stack", func() {

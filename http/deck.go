@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/mgjules/deckr/card"
-	"github.com/mgjules/deckr/card/french"
+	"github.com/mgjules/deckr/composition"
 	"github.com/mgjules/deckr/deck"
 	"github.com/mgjules/deckr/repo"
 )
@@ -39,6 +39,7 @@ func DomainDeckToRepoDeck(d *deck.Deck) *repo.Deck {
 	var rd repo.Deck
 	rd.ID = d.ID()
 	rd.Shuffled = d.IsShuffled()
+	rd.Composition = d.Composition()
 	for _, card := range d.Cards() {
 		rd.Cards = append(rd.Cards, card.Code().String())
 	}
@@ -47,25 +48,31 @@ func DomainDeckToRepoDeck(d *deck.Deck) *repo.Deck {
 }
 
 // RepoDeckToDeckOpened transforms a repo deck to a DeckOpened.
-func RepoDeckToDeckOpened(rd *repo.Deck) *DeckOpened {
+func RepoDeckToDeckOpened(rd *repo.Deck) (*DeckOpened, error) {
 	var d DeckOpened
 	d.ID = rd.ID
 	d.Shuffled = rd.Shuffled
 	d.Remaining = len(rd.Cards)
+
+	comp, err := composition.ParseFromString(rd.Composition)
+	if err != nil {
+		return nil, fmt.Errorf("parse composition: %w", err)
+	}
+
 	for _, rc := range rd.Cards {
 		c, err := card.NewCode(rc)
 		if err != nil {
-			continue
+			return nil, fmt.Errorf("new code: %w", err)
 		}
 
-		r, ok := french.Composition.Ranks().RankFromCode(*c)
+		r, ok := comp.Ranks().RankFromCode(*c)
 		if !ok {
-			continue
+			return nil, fmt.Errorf("card code '%s' has an invalid rank", c)
 		}
 
-		s, ok := french.Composition.Suits().SuitFromCode(*c)
+		s, ok := comp.Suits().SuitFromCode(*c)
 		if !ok {
-			continue
+			return nil, fmt.Errorf("card code '%s' has an invalid suit", c)
 		}
 
 		d.Cards = append(d.Cards, Card{
@@ -75,35 +82,26 @@ func RepoDeckToDeckOpened(rd *repo.Deck) *DeckOpened {
 		})
 	}
 
-	return &d
+	return &d, nil
 }
 
 // RepoDeckToDomainDeck transforms a repo deck to a domain deck.
 func RepoDeckToDomainDeck(rd *repo.Deck) (*deck.Deck, error) {
-	var cc []card.Card
+	var codes []card.Code
 	for _, rc := range rd.Cards {
 		c, err := card.NewCode(rc)
 		if err != nil {
-			continue
+			return nil, fmt.Errorf("new code: %w", err)
 		}
 
-		r, ok := french.Composition.Ranks().RankFromCode(*c)
-		if !ok {
-			continue
-		}
-
-		s, ok := french.Composition.Suits().SuitFromCode(*c)
-		if !ok {
-			continue
-		}
-
-		cc = append(cc, *card.NewCard(*r, *s, *c))
+		codes = append(codes, *c)
 	}
 
 	d, err := deck.New(
 		deck.WithID(rd.ID),
 		deck.WithShuffled(rd.Shuffled),
-		deck.WithCards(cc...),
+		deck.WithComposition(rd.Composition),
+		deck.WithCodes(codes...),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("new deck: %w", err)

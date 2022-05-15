@@ -7,8 +7,6 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-const testdataDir = "testdata"
-
 func TestCard(t *testing.T) {
 	t.Parallel()
 	RegisterFailHandler(Fail)

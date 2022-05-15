@@ -7,7 +7,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/mgjules/deckr/card"
-	"github.com/mgjules/deckr/card/french"
 	"github.com/mgjules/deckr/deck"
 	"github.com/mgjules/deckr/docs"
 	"github.com/mgjules/deckr/repo/inmemory"
@@ -72,15 +71,7 @@ func (s *Server) handleCreateDeck() gin.HandlerFunc {
 			return
 		}
 
-		cards, err := card.NewCards(french.Composition, codes...)
-		if err != nil {
-			s.log.Errorf("new cards: %v", err)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
-
-			return
-		}
-
-		d, err := deck.New(deck.WithCards(cards...))
+		d, err := deck.New(deck.WithCodes(codes...))
 		if err != nil {
 			s.log.Errorf("new deck: %v", err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
@@ -138,7 +129,13 @@ func (s *Server) handleOpenDeck() gin.HandlerFunc {
 			return
 		}
 
-		do := RepoDeckToDeckOpened(rd)
+		do, err := RepoDeckToDeckOpened(rd)
+		if err != nil {
+			s.log.Error(err)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
+
+			return
+		}
 
 		c.JSON(http.StatusOK, do)
 	}
