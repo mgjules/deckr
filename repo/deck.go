@@ -4,5 +4,5 @@ package repo
 type Deck struct {
 	ID       string
 	Shuffled bool
-	Cards    []Card
+	Cards    []string
 }

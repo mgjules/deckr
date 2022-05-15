@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/mgjules/deckr/card"
+	"github.com/mgjules/deckr/card/french"
 	"github.com/mgjules/deckr/deck"
 	"github.com/mgjules/deckr/repo"
 )
@@ -39,11 +40,7 @@ func DomainDeckToRepoDeck(d *deck.Deck) *repo.Deck {
 	rd.ID = d.ID()
 	rd.Shuffled = d.IsShuffled()
 	for _, card := range d.Cards() {
-		rd.Cards = append(rd.Cards, repo.Card{
-			Rank: repo.Rank{Name: card.Rank().String(), Code: card.Rank().Code()},
-			Suit: repo.Suit{Name: card.Suit().String(), Code: card.Suit().Code()},
-			Code: card.Code().String(),
-		})
+		rd.Cards = append(rd.Cards, card.Code().String())
 	}
 
 	return &rd
@@ -55,11 +52,26 @@ func RepoDeckToDeckOpened(rd *repo.Deck) *DeckOpened {
 	d.ID = rd.ID
 	d.Shuffled = rd.Shuffled
 	d.Remaining = len(rd.Cards)
-	for _, card := range rd.Cards {
+	for _, rc := range rd.Cards {
+		c, err := card.NewCode(rc)
+		if err != nil {
+			continue
+		}
+
+		r, ok := french.Composition.Ranks().RankFromCode(*c)
+		if !ok {
+			continue
+		}
+
+		s, ok := french.Composition.Suits().SuitFromCode(*c)
+		if !ok {
+			continue
+		}
+
 		d.Cards = append(d.Cards, Card{
-			Value: card.Rank.Name,
-			Suit:  card.Suit.Name,
-			Code:  card.Code,
+			Value: r.String(),
+			Suit:  s.String(),
+			Code:  c.String(),
 		})
 	}
 
@@ -70,16 +82,22 @@ func RepoDeckToDeckOpened(rd *repo.Deck) *DeckOpened {
 func RepoDeckToDomainDeck(rd *repo.Deck) (*deck.Deck, error) {
 	var cc []card.Card
 	for _, rc := range rd.Cards {
-		rank := card.NewRank(rc.Rank.Name, rc.Rank.Code)
-		suit := card.NewSuit(rc.Suit.Name, rc.Suit.Code)
-
-		var code *card.Code
-		code, err := card.NewCode(rc.Code)
+		c, err := card.NewCode(rc)
 		if err != nil {
 			continue
 		}
 
-		cc = append(cc, *card.NewCard(rank, suit, *code))
+		r, ok := french.Composition.Ranks().RankFromCode(*c)
+		if !ok {
+			continue
+		}
+
+		s, ok := french.Composition.Suits().SuitFromCode(*c)
+		if !ok {
+			continue
+		}
+
+		cc = append(cc, *card.NewCard(*r, *s, *c))
 	}
 
 	d, err := deck.New(
