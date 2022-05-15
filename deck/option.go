@@ -1,9 +1,5 @@
 package deck
 
-import (
-	"github.com/mgjules/deckr/card"
-)
-
 // Option is a function that can be used to modify a deck.
 type Option func(d *Deck)
 
@@ -22,7 +18,7 @@ func WithShuffled(s bool) Option {
 }
 
 // WithCodes returns an option that sets the card codes of the deck.
-func WithCodes(codes ...card.Code) Option {
+func WithCodes(codes ...string) Option {
 	return func(d *Deck) {
 		d.codes = codes
 	}

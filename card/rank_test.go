@@ -10,13 +10,13 @@ import (
 var _ = Describe("Rank", func() {
 	Describe("Getting rank from code", func() {
 		Context("from valid list of french ranks", func() {
-			comp, err := composition.ParseFromString(composition.French)
+			comp, err := composition.FromString(composition.French)
 			Expect(err).ToNot(HaveOccurred())
 
 			ranks := comp.Ranks()
 
 			Context("and a valid code", func() {
-				code, err := card.NewCode("AS")
+				code, err := card.CodeFromString("AS")
 				Expect(err).ToNot(HaveOccurred())
 
 				It("should return back a valid rank", func() {
@@ -27,7 +27,7 @@ var _ = Describe("Rank", func() {
 			})
 
 			Context("and an unknown code", func() {
-				code, err := card.NewCode("PS")
+				code, err := card.CodeFromString("PS")
 				Expect(err).ToNot(HaveOccurred())
 
 				It("should not return any rank", func() {

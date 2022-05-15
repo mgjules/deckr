@@ -18,7 +18,7 @@ var ErrNotEnoughCards = errors.New("not enough cards")
 type Deck struct {
 	id          string
 	shuffled    bool
-	codes       []card.Code
+	codes       []string
 	composition string
 	cards       []card.Card
 }
@@ -39,14 +39,19 @@ func New(opts ...Option) (*Deck, error) {
 		d.composition = composition.French
 	}
 
-	comp, err := composition.ParseFromString(d.composition)
+	comp, err := composition.FromString(d.composition)
 	if err != nil {
 		return nil, fmt.Errorf("parse composition: %w", err)
 	}
 
 	// Partial cards using codes.
 	if len(d.codes) > 0 {
-		for _, c := range d.codes {
+		codes, err := card.CodesFromStrings(d.codes...)
+		if err != nil {
+			return nil, fmt.Errorf("new codes: %w", err)
+		}
+
+		for _, c := range codes {
 			r, ok := comp.Ranks().RankFromCode(c)
 			if !ok {
 				return nil, fmt.Errorf("card code '%s' has an invalid rank", c)

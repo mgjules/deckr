@@ -15,8 +15,8 @@ var (
 	compositions = make(map[string]*Composition)
 )
 
-// ParseFromString returns a card composition given a string.
-func ParseFromString(s string) (*Composition, error) {
+// FromString returns a card composition given a string.
+func FromString(s string) (*Composition, error) {
 	c, ok := compositions[strings.ToLower(s)]
 	if !ok {
 		return nil, ErrUnknownComposition

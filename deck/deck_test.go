@@ -48,11 +48,11 @@ var _ = Describe("Deck", func() {
 			})
 
 			Context("and with specific codes", func() {
-				codes, err := card.NewCodes("AS", "KD", "AC", "2C", "KH")
-				Expect(err).ToNot(HaveOccurred())
-
 				It("should return back a partial list of cards in same order as codes", func() {
-					d, err := deck.New(deck.WithComposition(composition.French), deck.WithCodes(codes...))
+					d, err := deck.New(
+						deck.WithComposition(composition.French),
+						deck.WithCodes("AS", "KD", "AC", "2C", "KH"),
+					)
 					Expect(err).ToNot(HaveOccurred())
 					Expect(d.Remaining()).To(Equal(5))
 
@@ -94,10 +94,10 @@ var _ = Describe("Deck", func() {
 		})
 
 		Context("which is partial", func() {
-			codes, err := card.NewCodes("AS", "KD", "AC", "2C", "KH")
-			Expect(err).ToNot(HaveOccurred())
-
-			d, err := deck.New(deck.WithComposition(composition.French), deck.WithCodes(codes...))
+			d, err := deck.New(
+				deck.WithComposition(composition.French),
+				deck.WithCodes("AS", "KD", "AC", "2C", "KH"),
+			)
 			Expect(err).ToNot(HaveOccurred())
 			Expect(d.IsShuffled()).To(BeFalse())
 
@@ -140,10 +140,10 @@ var _ = Describe("Deck", func() {
 		})
 
 		Context("which is partial", func() {
-			codes, err := card.NewCodes("AS", "KD", "AC", "2C", "KH")
-			Expect(err).ToNot(HaveOccurred())
-
-			d, err := deck.New(deck.WithComposition(composition.French), deck.WithCodes(codes...))
+			d, err := deck.New(
+				deck.WithComposition(composition.French),
+				deck.WithCodes("AS", "KD", "AC", "2C", "KH"),
+			)
 			Expect(err).ToNot(HaveOccurred())
 			Expect(d.Remaining()).To(Equal(5))
 

@@ -10,7 +10,7 @@ import (
 var _ = Describe("Code", func() {
 	Describe("Creating a new code", func() {
 		Context("with a valid code string", func() {
-			c, err := card.NewCode("AS")
+			c, err := card.CodeFromString("AS")
 			Expect(err).ToNot(HaveOccurred())
 
 			It("should print back a valid code", func() {
@@ -24,10 +24,10 @@ var _ = Describe("Code", func() {
 		})
 
 		Context("with a valid french rank and suit", func() {
-			comp, err := composition.ParseFromString(composition.French)
+			comp, err := composition.FromString(composition.French)
 			Expect(err).ToNot(HaveOccurred())
 
-			c, err := card.NewCodeFromRankSuit(comp.Ranks()[0], comp.Suits()[0])
+			c, err := card.CodeFromRankSuit(comp.Ranks()[0], comp.Suits()[0])
 			Expect(err).ToNot(HaveOccurred())
 
 			It("should print back a valid code", func() {
@@ -43,13 +43,13 @@ var _ = Describe("Code", func() {
 
 	Describe("Creating a list of codes", func() {
 		Context("with a valid list of codes string", func() {
-			ak, err := card.NewCode("AK")
+			ak, err := card.CodeFromString("AK")
 			Expect(err).ToNot(HaveOccurred())
 
-			twos, err := card.NewCode("2S")
+			twos, err := card.CodeFromString("2S")
 			Expect(err).ToNot(HaveOccurred())
 
-			cc, err := card.NewCodes("AK", "2S")
+			cc, err := card.CodesFromStrings("AK", "2S")
 			Expect(err).ToNot(HaveOccurred())
 
 			It("should return a valid list of codes", func() {

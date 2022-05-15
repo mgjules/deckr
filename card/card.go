@@ -13,7 +13,7 @@ type Card struct {
 
 // NewCard returns a new card given a rank and suit.
 func NewCard(r Rank, s Suit) (*Card, error) {
-	c, err := NewCodeFromRankSuit(r, s)
+	c, err := CodeFromRankSuit(r, s)
 	if err != nil {
 		return nil, fmt.Errorf("new code: %w", err)
 	}

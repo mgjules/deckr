@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/mgjules/deckr/card"
 	"github.com/mgjules/deckr/deck"
 	"github.com/mgjules/deckr/docs"
 	"github.com/mgjules/deckr/repo/inmemory"
@@ -63,15 +62,7 @@ func (s *Server) handleCreateDeck() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		cc := c.QueryArray("codes")
 
-		codes, err := card.NewCodes(cc...)
-		if err != nil {
-			s.log.Errorf("new codes: %v", err)
-			c.AbortWithStatusJSON(http.StatusBadRequest, Error{err.Error()})
-
-			return
-		}
-
-		d, err := deck.New(deck.WithCodes(codes...))
+		d, err := deck.New(deck.WithCodes(cc...))
 		if err != nil {
 			s.log.Errorf("new deck: %v", err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})

@@ -5,5 +5,5 @@ type Deck struct {
 	ID          string
 	Shuffled    bool
 	Composition string
-	Cards       []string
+	Codes       []string
 }

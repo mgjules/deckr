@@ -41,7 +41,7 @@ func DomainDeckToRepoDeck(d *deck.Deck) *repo.Deck {
 	rd.Shuffled = d.IsShuffled()
 	rd.Composition = d.Composition()
 	for _, card := range d.Cards() {
-		rd.Cards = append(rd.Cards, card.Code().String())
+		rd.Codes = append(rd.Codes, card.Code().String())
 	}
 
 	return &rd
@@ -52,15 +52,15 @@ func RepoDeckToDeckOpened(rd *repo.Deck) (*DeckOpened, error) {
 	var d DeckOpened
 	d.ID = rd.ID
 	d.Shuffled = rd.Shuffled
-	d.Remaining = len(rd.Cards)
+	d.Remaining = len(rd.Codes)
 
-	comp, err := composition.ParseFromString(rd.Composition)
+	comp, err := composition.FromString(rd.Composition)
 	if err != nil {
 		return nil, fmt.Errorf("parse composition: %w", err)
 	}
 
-	for _, rc := range rd.Cards {
-		c, err := card.NewCode(rc)
+	for _, rc := range rd.Codes {
+		c, err := card.CodeFromString(rc)
 		if err != nil {
 			return nil, fmt.Errorf("new code: %w", err)
 		}
@@ -87,21 +87,11 @@ func RepoDeckToDeckOpened(rd *repo.Deck) (*DeckOpened, error) {
 
 // RepoDeckToDomainDeck transforms a repo deck to a domain deck.
 func RepoDeckToDomainDeck(rd *repo.Deck) (*deck.Deck, error) {
-	var codes []card.Code
-	for _, rc := range rd.Cards {
-		c, err := card.NewCode(rc)
-		if err != nil {
-			return nil, fmt.Errorf("new code: %w", err)
-		}
-
-		codes = append(codes, *c)
-	}
-
 	d, err := deck.New(
 		deck.WithID(rd.ID),
 		deck.WithShuffled(rd.Shuffled),
 		deck.WithComposition(rd.Composition),
-		deck.WithCodes(codes...),
+		deck.WithCodes(rd.Codes...),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("new deck: %w", err)
