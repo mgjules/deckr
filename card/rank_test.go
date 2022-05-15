@@ -20,8 +20,8 @@ var _ = Describe("Rank", func() {
 				Expect(err).ToNot(HaveOccurred())
 
 				It("should return back a valid rank", func() {
-					r, ok := ranks.RankFromCode(*code)
-					Expect(ok).To(BeTrue())
+					r, err := ranks.RankFromCode(*code)
+					Expect(err).ToNot(HaveOccurred())
 					Expect(*r).To(Equal(ranks[0]))
 				})
 			})
@@ -31,8 +31,8 @@ var _ = Describe("Rank", func() {
 				Expect(err).ToNot(HaveOccurred())
 
 				It("should not return any rank", func() {
-					r, ok := ranks.RankFromCode(*code)
-					Expect(ok).To(BeFalse())
+					r, err := ranks.RankFromCode(*code)
+					Expect(err).To(MatchError(card.ErrInvalidRank))
 					Expect(r).To(BeNil())
 				})
 			})

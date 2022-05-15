@@ -65,14 +65,14 @@ func RepoDeckToDeckOpened(rd *repo.Deck) (*DeckOpened, error) {
 			return nil, fmt.Errorf("new code: %w", err)
 		}
 
-		r, ok := comp.Ranks().RankFromCode(*c)
-		if !ok {
-			return nil, fmt.Errorf("card code '%s' has an invalid rank", c)
+		r, err := comp.Ranks().RankFromCode(*c)
+		if err != nil {
+			return nil, fmt.Errorf("rank from code: %w", err)
 		}
 
-		s, ok := comp.Suits().SuitFromCode(*c)
-		if !ok {
-			return nil, fmt.Errorf("card code '%s' has an invalid suit", c)
+		s, err := comp.Suits().SuitFromCode(*c)
+		if err != nil {
+			return nil, fmt.Errorf("suit from code: %w", err)
 		}
 
 		d.Cards = append(d.Cards, Card{

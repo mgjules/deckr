@@ -39,38 +39,47 @@ func New(opts ...Option) (*Deck, error) {
 		d.composition = composition.French
 	}
 
+	if err := d.generateCards(); err != nil {
+		return nil, fmt.Errorf("generate cards: %w", err)
+	}
+
+	return &d, nil
+}
+
+// generateCards generates the cards for the deck.
+func (d *Deck) generateCards() error {
 	comp, err := composition.FromString(d.composition)
 	if err != nil {
-		return nil, fmt.Errorf("parse composition: %w", err)
+		return fmt.Errorf("parse composition: %w", err)
 	}
 
 	// Partial cards using codes.
 	if len(d.codes) > 0 {
 		codes, err := card.CodesFromStrings(d.codes...)
 		if err != nil {
-			return nil, fmt.Errorf("new codes: %w", err)
+			return fmt.Errorf("new codes: %w", err)
 		}
 
 		for _, c := range codes {
-			r, ok := comp.Ranks().RankFromCode(c)
-			if !ok {
-				return nil, fmt.Errorf("card code '%s' has an invalid rank", c)
+			r, err := comp.Ranks().RankFromCode(c)
+			if err != nil {
+				return fmt.Errorf("rank from code: %w", err)
 			}
 
-			s, ok := comp.Suits().SuitFromCode(c)
-			if !ok {
-				return nil, fmt.Errorf("card code '%s' has an invalid suit", c)
+			s, err := comp.Suits().SuitFromCode(c)
+			if err != nil {
+				return fmt.Errorf("suit from code: %w", err)
 			}
 
 			card, err := card.NewCard(*r, *s)
 			if err != nil {
-				return nil, fmt.Errorf("new card: %w", err)
+				return fmt.Errorf("new card: %w", err)
 			}
 
 			d.cards = append(d.cards, *card)
 		}
 
-		return &d, nil
+		return nil
 	}
 
 	// Full cards.
@@ -78,14 +87,14 @@ func New(opts ...Option) (*Deck, error) {
 		for _, r := range comp.Ranks() {
 			card, err := card.NewCard(r, s)
 			if err != nil {
-				return nil, fmt.Errorf("new card: %w", err)
+				return fmt.Errorf("new card: %w", err)
 			}
 
 			d.cards = append(d.cards, *card)
 		}
 	}
 
-	return &d, nil
+	return nil
 }
 
 // ID returns the id of the deck.

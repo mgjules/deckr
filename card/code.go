@@ -1,8 +1,12 @@
 package card
 
 import (
+	"errors"
 	"fmt"
 )
+
+// ErrInvalidCode is returned when a code is invalid.
+var ErrInvalidCode = errors.New("invalid code")
 
 // Code represents a card code.
 type Code struct {
@@ -16,7 +20,7 @@ type Code struct {
 // The second character must be a valid suit.
 func CodeFromString(c string) (*Code, error) {
 	if len(c) != 2 {
-		return nil, fmt.Errorf("card code '%s' should be 2 characters", c)
+		return nil, ErrInvalidCode
 	}
 
 	return &Code{

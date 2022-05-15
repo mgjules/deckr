@@ -1,6 +1,12 @@
 package card
 
-import "strings"
+import (
+	"errors"
+	"strings"
+)
+
+// ErrInvalidRank is returned when a rank is invalid.
+var ErrInvalidRank = errors.New("invalid rank")
 
 // Rank represents the rank of a card.
 type Rank struct {
@@ -35,12 +41,12 @@ func (rs Ranks) Ranks() []Rank {
 }
 
 // RankFromCode returns the rank from the given code.
-func (rs Ranks) RankFromCode(c Code) (*Rank, bool) {
+func (rs Ranks) RankFromCode(c Code) (*Rank, error) {
 	for _, r := range rs.Ranks() {
 		if strings.EqualFold(r.Code(), c.Rank()) {
-			return &r, true
+			return &r, nil
 		}
 	}
 
-	return nil, false
+	return nil, ErrInvalidRank
 }

@@ -1,6 +1,12 @@
 package card
 
-import "strings"
+import (
+	"errors"
+	"strings"
+)
+
+// ErrInvalidSuit is returned when a suit is invalid.
+var ErrInvalidSuit = errors.New("invalid suit")
 
 // Suit represents the suit of a card.
 type Suit struct {
@@ -35,12 +41,12 @@ func (ss Suits) Suits() []Suit {
 }
 
 // SuitFromCode returns the suit from the given code.
-func (ss Suits) SuitFromCode(c Code) (*Suit, bool) {
+func (ss Suits) SuitFromCode(c Code) (*Suit, error) {
 	for _, s := range ss.Suits() {
 		if strings.EqualFold(s.Code(), c.Suit()) {
-			return &s, true
+			return &s, nil
 		}
 	}
 
-	return nil, false
+	return nil, ErrInvalidSuit
 }
