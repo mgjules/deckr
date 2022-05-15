@@ -25,18 +25,18 @@ var _ = Describe("Deck", func() {
 			}
 
 			Context("and with no codes", func() {
+				d, err := deck.New(deck.WithComposition(composition.French))
+				Expect(err).ToNot(HaveOccurred())
+				Expect(d.Remaining()).To(Equal(52))
+
+				raw, err := ioutil.ReadFile(testdataDir + "/full_french_cards.json")
+				Expect(err).ToNot(HaveOccurred())
+
+				var exp expected
+				err = json.Unmarshal(raw, &exp)
+				Expect(err).ToNot(HaveOccurred())
+
 				It("should return back a full list of cards in the correct order", func() {
-					d, err := deck.New(deck.WithComposition(composition.French))
-					Expect(err).ToNot(HaveOccurred())
-					Expect(d.Remaining()).To(Equal(52))
-
-					raw, err := ioutil.ReadFile(testdataDir + "/full_french_cards.json")
-					Expect(err).ToNot(HaveOccurred())
-
-					var exp expected
-					err = json.Unmarshal(raw, &exp)
-					Expect(err).ToNot(HaveOccurred())
-
 					Expect(d.Remaining()).To(Equal(len(exp.Cards)))
 
 					for i, c := range d.Cards() {
@@ -48,21 +48,21 @@ var _ = Describe("Deck", func() {
 			})
 
 			Context("and with specific codes", func() {
+				d, err := deck.New(
+					deck.WithComposition(composition.French),
+					deck.WithCodes("AS", "KD", "AC", "2C", "KH"),
+				)
+				Expect(err).ToNot(HaveOccurred())
+				Expect(d.Remaining()).To(Equal(5))
+
+				raw, err := ioutil.ReadFile(testdataDir + "/partial_french_cards.json")
+				Expect(err).ToNot(HaveOccurred())
+
+				var exp expected
+				err = json.Unmarshal(raw, &exp)
+				Expect(err).ToNot(HaveOccurred())
+
 				It("should return back a partial list of cards in same order as codes", func() {
-					d, err := deck.New(
-						deck.WithComposition(composition.French),
-						deck.WithCodes("AS", "KD", "AC", "2C", "KH"),
-					)
-					Expect(err).ToNot(HaveOccurred())
-					Expect(d.Remaining()).To(Equal(5))
-
-					raw, err := ioutil.ReadFile(testdataDir + "/partial_french_cards.json")
-					Expect(err).ToNot(HaveOccurred())
-
-					var exp expected
-					err = json.Unmarshal(raw, &exp)
-					Expect(err).ToNot(HaveOccurred())
-
 					Expect(d.Remaining()).To(Equal(len(exp.Cards)))
 
 					for i, c := range d.Cards() {
