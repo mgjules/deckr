@@ -15,7 +15,7 @@ Deckr provides a REST API to simulate a deck of cards.
   - [Mage Targets](#mage-targets)
     - [Example](#example)
       - [Generate docs](#generate-docs)
-      - [Run test with race detector](#run-test-with-race-detector)
+      - [Run tests with race detector](#run-tests-with-race-detector)
       - [Build deckr for MacOS M1](#build-deckr-for-macos-m1)
   - [Install](#install)
   - [Usage](#usage)
@@ -81,7 +81,7 @@ Targets:
 $ mage -v docs
 ```
 
-#### Run test with race detector
+#### Run tests with race detector
 
 ```shell
 $ mage -v testRace
