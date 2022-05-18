@@ -31,11 +31,13 @@ func NewServer(
 		repo:   repo,
 	}
 
+	s.registerServices()
+
 	return s
 }
 
-// RegisterServices registers services with the grpc server.
-func (s *Server) RegisterServices() {
+// registerServices registers services with the grpc server.
+func (s *Server) registerServices() {
 	RegisterDeckServiceServer(s.server, NewDeckService(s.log, s.repo))
 }
 
