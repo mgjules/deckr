@@ -19,6 +19,7 @@ import (
 type DeckService struct {
 	log  *logger.Logger
 	repo repo.Repository
+	UnimplementedDeckServiceServer
 }
 
 // NewDeckService creates a new DeckService.
