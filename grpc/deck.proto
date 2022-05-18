@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package grpc;
+
+option go_package = "github.com/mgjules/deckr/grpc;grpc";
+
+// Deck represents a opened deck of cards.
+message Deck {
+  string id = 1;
+  bool shuffled = 2;
+  int32 remaining = 3;
+  repeated Card cards = 4;
+}
+
+// Card represents a single card.
+message Card {
+  string value = 1;
+  string suit = 2;
+  string code = 3;
+}
+
+// Cards represents a collection of cards.
+message Cards { repeated Card cards = 1; }
