@@ -12,7 +12,7 @@ import (
 	"github.com/mgjules/deckr/grpc"
 	"github.com/mgjules/deckr/http"
 	"github.com/mgjules/deckr/logger"
-	"github.com/mgjules/deckr/repo/inmemory"
+	"github.com/mgjules/deckr/repo"
 	"github.com/urfave/cli/v2"
 )
 
@@ -62,6 +62,12 @@ var serve = &cli.Command{
 			Usage:   "port for GRPC server",
 			EnvVars: []string{"DECKR_GRPC_PORT"},
 		},
+		&cli.StringFlag{
+			Name:    "storage-uri",
+			Value:   "inmemory://",
+			Usage:   "URI of storage",
+			EnvVars: []string{"DECKR_STORAGE_URI"},
+		},
 	},
 	Action: func(c *cli.Context) error {
 		debug := c.Bool("debug")
@@ -76,7 +82,12 @@ var serve = &cli.Command{
 			return fmt.Errorf("new build info: %w", err)
 		}
 
-		repository := inmemory.NewRepository(log)
+		storageURI := c.String("storage-uri")
+
+		repository, err := repo.NewRepository(storageURI, log)
+		if err != nil {
+			return fmt.Errorf("new repository: %w", err)
+		}
 
 		var httpServer *http.Server
 		httpEnabled := c.Bool("http")
