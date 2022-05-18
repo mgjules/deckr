@@ -1,12 +1,12 @@
 package deck_test
 
 import (
-	"encoding/json"
 	"io/ioutil"
 
 	"github.com/mgjules/deckr/card"
 	"github.com/mgjules/deckr/composition"
 	"github.com/mgjules/deckr/deck"
+	"github.com/mgjules/deckr/json"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
