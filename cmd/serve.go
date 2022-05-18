@@ -89,6 +89,10 @@ var serve = &cli.Command{
 			return fmt.Errorf("new repository: %w", err)
 		}
 
+		if err := repository.Migrate(c.Context); err != nil {
+			return fmt.Errorf("migrate repository: %w", err)
+		}
+
 		var httpServer *http.Server
 		httpEnabled := c.Bool("http")
 		if httpEnabled {
