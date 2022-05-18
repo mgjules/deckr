@@ -51,6 +51,11 @@ func Lint() error {
 	return sh.Run("golangci-lint", "run", "./...", "--fast")
 }
 
+// Generate stubs from proto files
+func Proto() error {
+	return sh.Run("buf", "generate")
+}
+
 type Build mg.Namespace
 
 // Builds for all supported popular OS/Arch

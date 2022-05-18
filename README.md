@@ -15,12 +15,13 @@ Deckr provides a REST API to simulate a deck of cards.
   - [Mage Targets](#mage-targets)
     - [Example](#example)
       - [Generate docs](#generate-docs)
+      - [Generate stubs from proto files](#generate-stubs-from-proto-files)
       - [Run tests with race detector](#run-tests-with-race-detector)
       - [Build deckr for MacOS M1](#build-deckr-for-macos-m1)
   - [Install](#install)
   - [Usage](#usage)
     - [REST API server](#rest-api-server)
-  - [API documentation](#api-documentation)
+  - [REST API documentation](#rest-api-documentation)
   - [License](#license)
 
 ## Requirements
@@ -29,26 +30,48 @@ Deckr provides a REST API to simulate a deck of cards.
 - [Mage](https://github.com/magefile/mage) - replacement for Makefile in Go.
     
     ```shell
-    go install github.com/magefile/mage@latest
+    $ go install github.com/magefile/mage@latest
     ```
 
 - [Golangci-lint](https://github.com/golangci/golangci-lint) - Fast Go linters runner.
       
     ```shell
-    go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+    $ go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
     ```
     
 - [Ginkgo](https://github.com/onsi/ginkgo) - Expressive testing framework.
         
     ```shell
-    go install github.com/onsi/ginkgo/v2/ginkgo@latest
+    $ go install github.com/onsi/ginkgo/v2/ginkgo@latest
     ```
     
 - [Swag](https://github.com/swaggo/swag) - Generate REST API documentation.
         
     ```shell
-    go install github.com/swaggo/swag/cmd/swag@latest
+    $ go install github.com/swaggo/swag/cmd/swag@latest
     ```
+
+- [Buf](https://github.com/bufbuild/buf) - A new way of working with Protocol Buffers.
+
+   ```shell
+   $ go install github.com/bufbuild/buf/cmd/buf@latest
+   ```
+
+- [Protoc](https://developers.google.com/protocol-buffers) - Protocol Buffers compiler.
+
+   For installation instructions, see [Protocol Buffer Compiler Installation](https://grpc.io/docs/protoc-installation/).
+
+- [Protoc-gen-go](https://github.com/golang/protobuf/protoc-gen-go) - Go code generator for Protocol Buffers.
+  
+   ```shell
+   $ go install github.com/golang/protobuf/protoc-gen-go@latest
+   ```
+
+- [Protoc-gen-go-grpc](https://google.golang.org/grpc/cmd/protoc-gen-go-grpc) - Go code generator for gRPC.
+  
+   ```shell
+   $ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+   ```
     
 - [Docker](https://www.docker.com) - Containerization.
 
@@ -68,6 +91,7 @@ Targets:
   build:winAmd64      Builds for Windows 64bit
   docs                Generates docs
   lint                Run golangci linters
+  proto               Generate stubs from proto files
   test                Run tests
   testRace            Run tests with race detector
   tidy                Run go mod tidy
@@ -79,6 +103,12 @@ Targets:
 
 ```shell
 $ mage -v docs
+```
+
+#### Generate stubs from proto files
+
+```shell
+$ mage -v proto
 ```
 
 #### Run tests with race detector
@@ -156,15 +186,20 @@ USAGE:
    deckr serve [command options] [arguments...]
 
 OPTIONS:
-   --debug       whether running in PROD or DEBUG mode (default: false) [$DECKR_DEBUG]
-   --host value  host/IP for HTTP server (default: "localhost") [$DECKR_HOST]
-   --port value  port for HTTP server (default: 9000) [$DECKR_PORT]
-   --help, -h    show help (default: false)
+   --debug              whether running in PROD or DEBUG mode (default: false) [$DECKR_DEBUG]
+   --http               whether to start the HTTP server (default: true) [$DECKR_HTTP]
+   --http-host value    host/IP for HTTP server (default: "localhost") [$DECKR_HTTP_HOST]
+   --http-port value    port for HTTP server (default: 9000) [$DECKR_HTTP_PORT]
+   --grpc               whether to start the GRPC server (default: false) [$DECKR_GRPC]
+   --grpc-host value    host/IP for GRPC server (default: "localhost") [$DECKR_GRPC_HOST]
+   --grpc-port value    port for GRPC server (default: 9001) [$DECKR_GRPC_PORT]
+   --storage-uri value  URI of storage (default: "inmemory://") [$DECKR_STORAGE_URI]
+   --help, -h           show help (default: false)
 ```
 
-## API documentation
+## REST API documentation
 
-The API documentation is generated using Swag and is available at `/swagger/index.html`.
+The REST API documentation is generated using Swag and is available at `/swagger/index.html`.
 
 ## License
 
