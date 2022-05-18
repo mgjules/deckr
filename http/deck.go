@@ -1,12 +1,7 @@
 package http
 
 import (
-	"fmt"
-
-	"github.com/mgjules/deckr/card"
-	"github.com/mgjules/deckr/composition"
 	"github.com/mgjules/deckr/deck"
-	"github.com/mgjules/deckr/repo"
 )
 
 // DeckClosed represents a closed deck of cards.
@@ -34,68 +29,11 @@ func DomainDeckToDeckClosed(d *deck.Deck) *DeckClosed {
 	return &dc
 }
 
-// DomainDeckToRepoDeck transforms a domain deck to a repo deck.
-func DomainDeckToRepoDeck(d *deck.Deck) *repo.Deck {
-	var rd repo.Deck
-	rd.ID = d.ID()
-	rd.Shuffled = d.IsShuffled()
-	rd.Composition = d.Composition()
-	for _, card := range d.Cards() {
-		rd.Codes = append(rd.Codes, card.Code().String())
-	}
+// DomainDeckToDeckOpened transforms a domain deck to a DeckOpened.
+func DomainDeckToDeckOpened(d *deck.Deck) *DeckOpened {
+	var do DeckOpened
+	do.DeckClosed = *DomainDeckToDeckClosed(d)
+	do.Cards = DomainCardsToCards(d.Cards()).Cards
 
-	return &rd
-}
-
-// RepoDeckToDeckOpened transforms a repo deck to a DeckOpened.
-func RepoDeckToDeckOpened(rd *repo.Deck) (*DeckOpened, error) {
-	var d DeckOpened
-	d.ID = rd.ID
-	d.Shuffled = rd.Shuffled
-	d.Remaining = len(rd.Codes)
-
-	comp, err := composition.FromString(rd.Composition)
-	if err != nil {
-		return nil, fmt.Errorf("parse composition: %w", err)
-	}
-
-	for _, rc := range rd.Codes {
-		c, err := card.CodeFromString(rc)
-		if err != nil {
-			return nil, fmt.Errorf("new code: %w", err)
-		}
-
-		r, err := comp.Ranks().RankFromCode(*c)
-		if err != nil {
-			return nil, fmt.Errorf("rank from code: %w", err)
-		}
-
-		s, err := comp.Suits().SuitFromCode(*c)
-		if err != nil {
-			return nil, fmt.Errorf("suit from code: %w", err)
-		}
-
-		d.Cards = append(d.Cards, Card{
-			Value: r.String(),
-			Suit:  s.String(),
-			Code:  c.String(),
-		})
-	}
-
-	return &d, nil
-}
-
-// RepoDeckToDomainDeck transforms a repo deck to a domain deck.
-func RepoDeckToDomainDeck(rd *repo.Deck) (*deck.Deck, error) {
-	d, err := deck.New(
-		deck.WithID(rd.ID),
-		deck.WithShuffled(rd.Shuffled),
-		deck.WithComposition(rd.Composition),
-		deck.WithCodes(rd.Codes...),
-	)
-	if err != nil {
-		return nil, fmt.Errorf("new deck: %w", err)
-	}
-
-	return d, nil
+	return &do
 }

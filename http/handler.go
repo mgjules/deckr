@@ -84,8 +84,7 @@ func (s *Server) handleCreateDeck() gin.HandlerFunc {
 			return
 		}
 
-		rd := DomainDeckToRepoDeck(d)
-		if err := s.repo.Save(c, rd); err != nil {
+		if err := s.repo.Save(c, d); err != nil {
 			s.log.Errorf("save deck: %v", err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
 
@@ -119,7 +118,7 @@ func (s *Server) handleOpenDeck() gin.HandlerFunc {
 			return
 		}
 
-		rd, err := s.repo.Get(c, id)
+		d, err := s.repo.Get(c, id)
 		if err != nil {
 			s.log.Errorf("open deck: %v", err)
 
@@ -134,13 +133,7 @@ func (s *Server) handleOpenDeck() gin.HandlerFunc {
 			return
 		}
 
-		do, err := RepoDeckToDeckOpened(rd)
-		if err != nil {
-			s.log.Error(err)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
-
-			return
-		}
+		do := DomainDeckToDeckOpened(d)
 
 		c.JSON(http.StatusOK, do)
 	}
@@ -176,7 +169,7 @@ func (s *Server) handleDrawCards() gin.HandlerFunc {
 			return
 		}
 
-		rd, err := s.repo.Get(c, id)
+		d, err := s.repo.Get(c, id)
 		if err != nil {
 			s.log.Errorf("get deck: %v", err)
 
@@ -186,14 +179,6 @@ func (s *Server) handleDrawCards() gin.HandlerFunc {
 				return
 			}
 
-			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
-
-			return
-		}
-
-		d, err := RepoDeckToDomainDeck(rd)
-		if err != nil {
-			s.log.Error(err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
 
 			return
@@ -214,8 +199,7 @@ func (s *Server) handleDrawCards() gin.HandlerFunc {
 			return
 		}
 
-		rd = DomainDeckToRepoDeck(d)
-		if err := s.repo.Save(c, rd); err != nil {
+		if err := s.repo.Save(c, d); err != nil {
 			s.log.Errorf("save deck: %v", err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
 
@@ -249,7 +233,7 @@ func (s *Server) handleShuffleDeck() gin.HandlerFunc {
 			return
 		}
 
-		rd, err := s.repo.Get(c, id)
+		d, err := s.repo.Get(c, id)
 		if err != nil {
 			s.log.Errorf("get deck: %v", err)
 
@@ -264,18 +248,9 @@ func (s *Server) handleShuffleDeck() gin.HandlerFunc {
 			return
 		}
 
-		d, err := RepoDeckToDomainDeck(rd)
-		if err != nil {
-			s.log.Error(err)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
-
-			return
-		}
-
 		d.Shuffle()
 
-		rd = DomainDeckToRepoDeck(d)
-		if err := s.repo.Save(c, rd); err != nil {
+		if err := s.repo.Save(c, d); err != nil {
 			s.log.Errorf("save deck: %v", err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, Error{err.Error()})
 

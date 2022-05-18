@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/mgjules/deckr/deck"
 	"github.com/mgjules/deckr/logger"
-	"github.com/mgjules/deckr/repo"
 )
 
 // ErrDeckNotFound is the error returned when a deck is not found.
@@ -17,7 +17,7 @@ var ErrDeckNotFound = errors.New("deck not found")
 type Repository struct {
 	log *logger.Logger
 
-	items map[string]*repo.Deck
+	items map[string]*Deck
 	mu    sync.Mutex
 }
 
@@ -25,18 +25,23 @@ type Repository struct {
 func NewRepository(log *logger.Logger) *Repository {
 	return &Repository{
 		log:   log,
-		items: make(map[string]*repo.Deck),
+		items: make(map[string]*Deck),
 	}
 }
 
 // Get returns the deck with the given id.
-func (r *Repository) Get(_ context.Context, id string) (*repo.Deck, error) {
+func (r *Repository) Get(_ context.Context, id string) (*deck.Deck, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	d, ok := r.items[id]
+	saved, ok := r.items[id]
 	if !ok {
 		return nil, fmt.Errorf("deck '%s': %w", id, ErrDeckNotFound)
+	}
+
+	d, err := DeckToDomainDeck(saved)
+	if err != nil {
+		return nil, fmt.Errorf("deck '%s': %w", id, err)
 	}
 
 	r.log.Debugf("get deck '%s'", d.ID)
@@ -45,13 +50,15 @@ func (r *Repository) Get(_ context.Context, id string) (*repo.Deck, error) {
 }
 
 // Save saves the given deck.
-func (r *Repository) Save(_ context.Context, d *repo.Deck) error {
+func (r *Repository) Save(_ context.Context, d *deck.Deck) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	r.items[d.ID] = d
+	save := DomainDeckToDeck(d)
 
-	r.log.Debugf("saved deck '%s'", d.ID)
+	r.items[save.ID] = save
+
+	r.log.Debugf("saved deck '%s'", save.ID)
 
 	return nil
 }
