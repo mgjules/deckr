@@ -97,7 +97,7 @@ func (s *Server) registerRoutes() {
 func (s *Server) Start() error {
 	s.log.Infof("Listening on http://%s...", s.addr)
 
-	if err := s.http.ListenAndServe(); err != nil {
+	if err := s.http.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		return fmt.Errorf("serve: %w", err)
 	}
 
