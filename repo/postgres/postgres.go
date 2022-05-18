@@ -7,12 +7,10 @@ import (
 
 	"github.com/mgjules/deckr/deck"
 	"github.com/mgjules/deckr/logger"
+	"github.com/mgjules/deckr/repo/errs"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
-
-// ErrDeckNotFound is the error returned when a deck is not found.
-var ErrDeckNotFound = errors.New("deck not found")
 
 // Repository is a PostgreSQL implementation of the deckr.Repository interface.
 type Repository struct {
@@ -37,10 +35,16 @@ func NewRepository(uri string, log *logger.Logger) (*Repository, error) {
 
 // Get returns the deck with the given id.
 func (r *Repository) Get(_ context.Context, id string) (*deck.Deck, error) {
-	var saved Deck
+	saved := Deck{
+		ID: id,
+	}
 
-	if err := r.db.First(&saved, id); err != nil {
-		return nil, fmt.Errorf("deck '%s': %w", id, ErrDeckNotFound)
+	if err := r.db.First(&saved).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("deck '%s': %w", id, errs.ErrDeckNotFound)
+		}
+
+		return nil, fmt.Errorf("deck '%s': %w", id, err)
 	}
 
 	d, err := DeckToDomainDeck(&saved)
@@ -57,7 +61,9 @@ func (r *Repository) Get(_ context.Context, id string) (*deck.Deck, error) {
 func (r *Repository) Save(_ context.Context, d *deck.Deck) error {
 	save := DomainDeckToDeck(d)
 
-	r.db.Save(save)
+	if err := r.db.Save(save).Error; err != nil {
+		return fmt.Errorf("save deck '%s': %w", save.ID, err)
+	}
 
 	r.log.Debugf("saved deck '%s'", save.ID)
 

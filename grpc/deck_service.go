@@ -9,7 +9,7 @@ import (
 	"github.com/mgjules/deckr/deck"
 	"github.com/mgjules/deckr/logger"
 	"github.com/mgjules/deckr/repo"
-	"github.com/mgjules/deckr/repo/inmemory"
+	"github.com/mgjules/deckr/repo/errs"
 	"github.com/satori/uuid"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -74,8 +74,8 @@ func (s *DeckService) OpenDeck(ctx context.Context, req *OpenDeckRequest) (*Open
 	if err != nil {
 		s.log.Errorf("open deck: %v", err)
 
-		if errors.Is(err, inmemory.ErrDeckNotFound) {
-			return nil, status.Errorf(codes.NotFound, inmemory.ErrDeckNotFound.Error())
+		if errors.Is(err, errs.ErrDeckNotFound) {
+			return nil, status.Errorf(codes.NotFound, errs.ErrDeckNotFound.Error())
 		}
 
 		return nil, status.Errorf(codes.Internal, err.Error())
@@ -109,8 +109,8 @@ func (s *DeckService) DrawCards(ctx context.Context, req *DrawCardsRequest) (*Dr
 	if err != nil {
 		s.log.Errorf("get deck: %v", err)
 
-		if errors.Is(err, inmemory.ErrDeckNotFound) {
-			return nil, status.Errorf(codes.NotFound, inmemory.ErrDeckNotFound.Error())
+		if errors.Is(err, errs.ErrDeckNotFound) {
+			return nil, status.Errorf(codes.NotFound, errs.ErrDeckNotFound.Error())
 		}
 
 		return nil, status.Errorf(codes.Internal, err.Error())
@@ -153,8 +153,8 @@ func (s *DeckService) ShuffleDeck(ctx context.Context, req *ShuffleDeckRequest) 
 	if err != nil {
 		s.log.Errorf("get deck: %v", err)
 
-		if errors.Is(err, inmemory.ErrDeckNotFound) {
-			return nil, status.Errorf(codes.NotFound, inmemory.ErrDeckNotFound.Error())
+		if errors.Is(err, errs.ErrDeckNotFound) {
+			return nil, status.Errorf(codes.NotFound, errs.ErrDeckNotFound.Error())
 		}
 
 		return nil, status.Errorf(codes.Internal, err.Error())

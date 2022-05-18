@@ -32,14 +32,14 @@ type Server struct {
 
 // NewServer creates a new Server.
 func NewServer(
-	prod bool,
+	debug bool,
 	host string,
 	port int,
 	logger *logger.Logger,
 	build *build.Info,
 	repo repo.Repository,
 ) *Server {
-	if prod {
+	if !debug {
 		gin.SetMode(gin.ReleaseMode)
 	}
 

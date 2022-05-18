@@ -2,16 +2,13 @@ package inmemory
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"sync"
 
 	"github.com/mgjules/deckr/deck"
 	"github.com/mgjules/deckr/logger"
+	"github.com/mgjules/deckr/repo/errs"
 )
-
-// ErrDeckNotFound is the error returned when a deck is not found.
-var ErrDeckNotFound = errors.New("deck not found")
 
 // Repository is an in-memory implementation of the deckr.Repository interface.
 type Repository struct {
@@ -36,7 +33,7 @@ func (r *Repository) Get(_ context.Context, id string) (*deck.Deck, error) {
 
 	saved, ok := r.items[id]
 	if !ok {
-		return nil, fmt.Errorf("deck '%s': %w", id, ErrDeckNotFound)
+		return nil, fmt.Errorf("deck '%s': %w", id, errs.ErrDeckNotFound)
 	}
 
 	d, err := DeckToDomainDeck(saved)

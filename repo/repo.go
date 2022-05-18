@@ -28,7 +28,7 @@ func NewRepository(uri string, log *logger.Logger) (Repository, error) {
 	switch u.Scheme {
 	case "inmemory":
 		return inmemory.NewRepository(log), nil
-	case "postgres":
+	case "postgresql":
 		repo, err := postgres.NewRepository(uri, log)
 		if err != nil {
 			return nil, fmt.Errorf("new postgres repository: %w", err)

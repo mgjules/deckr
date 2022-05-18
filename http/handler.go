@@ -10,7 +10,7 @@ import (
 	"github.com/mgjules/deckr/composition"
 	"github.com/mgjules/deckr/deck"
 	"github.com/mgjules/deckr/docs"
-	"github.com/mgjules/deckr/repo/inmemory"
+	"github.com/mgjules/deckr/repo/errs"
 	"github.com/satori/uuid"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
@@ -122,8 +122,8 @@ func (s *Server) handleOpenDeck() gin.HandlerFunc {
 		if err != nil {
 			s.log.Errorf("open deck: %v", err)
 
-			if errors.Is(err, inmemory.ErrDeckNotFound) {
-				c.AbortWithStatusJSON(http.StatusNotFound, Error{inmemory.ErrDeckNotFound.Error()})
+			if errors.Is(err, errs.ErrDeckNotFound) {
+				c.AbortWithStatusJSON(http.StatusNotFound, Error{errs.ErrDeckNotFound.Error()})
 
 				return
 			}
@@ -173,8 +173,8 @@ func (s *Server) handleDrawCards() gin.HandlerFunc {
 		if err != nil {
 			s.log.Errorf("get deck: %v", err)
 
-			if errors.Is(err, inmemory.ErrDeckNotFound) {
-				c.AbortWithStatusJSON(http.StatusNotFound, Error{inmemory.ErrDeckNotFound.Error()})
+			if errors.Is(err, errs.ErrDeckNotFound) {
+				c.AbortWithStatusJSON(http.StatusNotFound, Error{errs.ErrDeckNotFound.Error()})
 
 				return
 			}
@@ -237,8 +237,8 @@ func (s *Server) handleShuffleDeck() gin.HandlerFunc {
 		if err != nil {
 			s.log.Errorf("get deck: %v", err)
 
-			if errors.Is(err, inmemory.ErrDeckNotFound) {
-				c.AbortWithStatusJSON(http.StatusNotFound, Error{inmemory.ErrDeckNotFound.Error()})
+			if errors.Is(err, errs.ErrDeckNotFound) {
+				c.AbortWithStatusJSON(http.StatusNotFound, Error{errs.ErrDeckNotFound.Error()})
 
 				return
 			}
