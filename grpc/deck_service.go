@@ -53,8 +53,7 @@ func (s *DeckService) CreateDeck(ctx context.Context, req *CreateDeckRequest) (*
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
-	dc := DomainDeckToDeck(d)
-	dc.Cards = nil
+	dc := DomainDeckToDeckClosed(d)
 
 	return &CreateDeckResponse{
 		Deck: dc,
@@ -81,7 +80,7 @@ func (s *DeckService) OpenDeck(ctx context.Context, req *OpenDeckRequest) (*Open
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
-	do := DomainDeckToDeck(d)
+	do := DomainDeckToDeckOpened(d)
 
 	return &OpenDeckResponse{
 		Deck: do,
@@ -133,7 +132,7 @@ func (s *DeckService) DrawCards(ctx context.Context, req *DrawCardsRequest) (*Dr
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
-	cards := DomainCardsToCards(drawn).Cards
+	cards := DomainCardsToCards(drawn)
 
 	return &DrawCardsResponse{
 		Cards: cards,
@@ -173,27 +172,37 @@ func (s *DeckService) ShuffleDeck(ctx context.Context, req *ShuffleDeckRequest) 
 	}, nil
 }
 
-// DomainDeckToDeck transforms a domain deck to a DeckClosed.
-func DomainDeckToDeck(d *deck.Deck) *Deck {
-	var dg Deck
-	dg.Id = d.ID()
-	dg.Shuffled = d.IsShuffled()
-	dg.Remaining = int32(d.Remaining())
-	dg.Cards = DomainCardsToCards(d.Cards()).Cards
+// DomainDeckToDeckClosed transforms a domain deck to a DeckClosed.
+func DomainDeckToDeckClosed(d *deck.Deck) *DeckClosed {
+	var dc DeckClosed
+	dc.Id = d.ID()
+	dc.Shuffled = d.IsShuffled()
+	dc.Remaining = uint32(d.Remaining())
 
-	return &dg
+	return &dc
+}
+
+// DomainDeckToDeckOpened transforms a domain deck to a DeckOpened.
+func DomainDeckToDeckOpened(d *deck.Deck) *DeckOpened {
+	var do DeckOpened
+	do.Id = d.ID()
+	do.Shuffled = d.IsShuffled()
+	do.Remaining = uint32(d.Remaining())
+	do.Cards = DomainCardsToCards(d.Cards())
+
+	return &do
 }
 
 // DomainCardsToCards transforms domain cards to Cards.
-func DomainCardsToCards(dc []card.Card) *Cards {
-	var c Cards
+func DomainCardsToCards(dc []card.Card) []*Card {
+	var cc []*Card
 	for _, card := range dc {
-		c.Cards = append(c.Cards, &Card{
+		cc = append(cc, &Card{
 			Value: card.Rank().String(),
 			Suit:  card.Suit().String(),
 			Code:  card.Code().String(),
 		})
 	}
 
-	return &c
+	return cc
 }

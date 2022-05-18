@@ -14,7 +14,7 @@ message CreateDeckRequest {
 
 // CreateDeckResponse holds the deck created.
 message CreateDeckResponse {
-  Deck deck = 1;
+  DeckClosed deck = 1;
 }
 
 // OpenDeckRequest holds the deck id needed to open a deck.
@@ -22,7 +22,7 @@ message OpenDeckRequest { string id = 1; }
 
 // OpenDeckResponse holds the deck opened.
 message OpenDeckResponse {
-  Deck deck = 1;
+  DeckOpened deck = 1;
 }
 
 // DrawCardsRequest holds the id of the deck and number of cards to draw from the deck.

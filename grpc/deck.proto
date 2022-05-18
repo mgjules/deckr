@@ -4,12 +4,19 @@ package grpc;
 
 option go_package = "github.com/mgjules/deckr/grpc;grpc";
 
-// Deck represents a opened deck of cards.
-message Deck {
+// DeckOpened represents a opened deck of cards.
+message DeckOpened {
   string id = 1;
   bool shuffled = 2;
-  int32 remaining = 3;
+  uint32 remaining = 3;
   repeated Card cards = 4;
+}
+
+// DeckClosed represents a closed deck of cards.
+message DeckClosed {
+  string id = 1;
+  bool shuffled = 2;
+  uint32 remaining = 3;
 }
 
 // Card represents a single card.
@@ -18,6 +25,3 @@ message Card {
   string suit = 2;
   string code = 3;
 }
-
-// Cards represents a collection of cards.
-message Cards { repeated Card cards = 1; }
