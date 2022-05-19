@@ -4,7 +4,7 @@ package grpc;
 
 option go_package = "github.com/mgjules/deckr/grpc;grpc";
 
-import "grpc/deck.proto";
+import "transport/grpc/deck.proto";
 
 // CreateDeckRequest holds the composition and optional codes needed to create a deck.
 message CreateDeckRequest {

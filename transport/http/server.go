@@ -33,8 +33,7 @@ type Server struct {
 // NewServer creates a new Server.
 func NewServer(
 	debug bool,
-	host string,
-	port int,
+	addr string,
 	logger *logger.Logger,
 	build *build.Info,
 	repo repo.Repository,
@@ -49,7 +48,7 @@ func NewServer(
 
 	s := Server{
 		router: gin.Default(),
-		addr:   fmt.Sprintf("%s:%d", host, port),
+		addr:   addr,
 		log:    logger,
 		build:  build,
 		repo:   repo,

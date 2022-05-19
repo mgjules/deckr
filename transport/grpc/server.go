@@ -1,6 +1,7 @@
 package grpc
 
 import (
+	context "context"
 	"fmt"
 	"net"
 
@@ -19,13 +20,12 @@ type Server struct {
 
 // NewServer creates a new grpc server.
 func NewServer(
-	host string,
-	port int,
+	addr string,
 	log *logger.Logger,
 	repo repo.Repository,
 ) *Server {
 	s := &Server{
-		addr:   fmt.Sprintf("%s:%d", host, port),
+		addr:   addr,
 		server: grpc.NewServer(),
 		log:    log,
 		repo:   repo,
@@ -58,8 +58,10 @@ func (s *Server) Start() error {
 }
 
 // Stop stops the grpc server.
-func (s *Server) Stop() {
+func (s *Server) Stop(context.Context) error {
 	s.log.Info("Stopping server ...")
 
 	s.server.GracefulStop()
+
+	return nil
 }

@@ -187,12 +187,7 @@ USAGE:
 
 OPTIONS:
    --debug              whether running in PROD or DEBUG mode (default: false) [$DECKR_DEBUG]
-   --http               whether to start the HTTP server (default: true) [$DECKR_HTTP]
-   --http-host value    host/IP for HTTP server (default: "localhost") [$DECKR_HTTP_HOST]
-   --http-port value    port for HTTP server (default: 9000) [$DECKR_HTTP_PORT]
-   --grpc               whether to start the GRPC server (default: false) [$DECKR_GRPC]
-   --grpc-host value    host/IP for GRPC server (default: "localhost") [$DECKR_GRPC_HOST]
-   --grpc-port value    port for GRPC server (default: 9001) [$DECKR_GRPC_PORT]
+   --server-uri value   URI of server (default: "http://localhost:9000") [$DECKR_SERVER_URI]
    --storage-uri value  URI of storage (default: "inmemory://") [$DECKR_STORAGE_URI]
    --help, -h           show help (default: false)
 ```

@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             (unknown)
-// source: grpc/deck_service.proto
+// source: transport/grpc/deck_service.proto
 
 package grpc
 
@@ -221,5 +221,5 @@ var DeckService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "grpc/deck_service.proto",
+	Metadata: "transport/grpc/deck_service.proto",
 }
