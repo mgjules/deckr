@@ -66,3 +66,10 @@ func (r *Repository) Migrate(_ context.Context) error {
 
 	return nil
 }
+
+// Close closes any external connection in the repository.
+func (r *Repository) Close(_ context.Context) error {
+	r.log.Debug("in-memory repository has no external connection to close")
+
+	return nil
+}

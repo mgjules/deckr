@@ -16,6 +16,7 @@ type Repository interface {
 	Get(context.Context, string) (*deck.Deck, error)
 	Save(context.Context, *deck.Deck) error
 	Migrate(context.Context) error
+	Close(ctx context.Context) error
 }
 
 // NewRepository returns a new repository.

@@ -80,3 +80,13 @@ func (r *Repository) Migrate(_ context.Context) error {
 
 	return nil
 }
+
+// Close closes any external connection in the repository.
+func (r *Repository) Close(_ context.Context) error {
+	db, err := r.db.DB()
+	if err != nil {
+		return fmt.Errorf("get db instance: %w", err)
+	}
+
+	return db.Close()
+}
