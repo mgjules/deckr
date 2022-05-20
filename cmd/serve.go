@@ -17,7 +17,7 @@ import (
 
 var serve = &cli.Command{
 	Name:  "serve",
-	Usage: "Starts the REST API server.",
+	Usage: "Starts the REST/gRPC API server.",
 	Flags: []cli.Flag{
 		&cli.BoolFlag{
 			Name:    "debug",
@@ -57,6 +57,11 @@ var serve = &cli.Command{
 		if err != nil {
 			return fmt.Errorf("new repository: %w", err)
 		}
+		defer func() {
+			if err = repository.Close(c.Context); err != nil {
+				log.Errorf("close repository: %w", err)
+			}
+		}()
 
 		if err = repository.Migrate(c.Context); err != nil {
 			return fmt.Errorf("migrate repository: %w", err)

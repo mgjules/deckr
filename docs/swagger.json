@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "A REST API for playing with a deck of cards.",
+        "description": "A REST/gRPC API for playing with a deck of cards.",
         "title": "Deckr",
         "contact": {
             "name": "Michaël Giovanni Jules",

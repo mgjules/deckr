@@ -10,7 +10,7 @@ import (
 
 // @title        Deckr
 // @version      v0.3.2
-// @description  A REST API for playing with a deck of cards.
+// @description  A REST/gRPC API for playing with a deck of cards.
 
 // @contact.name   Michaël Giovanni Jules
 // @contact.url    https://mgjules.dev
@@ -22,8 +22,8 @@ import (
 func main() {
 	app := cli.NewApp()
 	app.Name = "deckr"
-	app.Usage = "A REST API for playing with a deck of cards"
-	app.Description = "Deckr exposes a REST API for playing with a deck of cards of your choice."
+	app.Usage = "A REST/gRPC API for playing with a deck of cards"
+	app.Description = "Deckr exposes a REST/gRPC API for playing with a deck of cards of your choice."
 	app.Authors = []*cli.Author{
 		{
 			Name:  "Michaël Giovanni Jules",

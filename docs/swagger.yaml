@@ -78,7 +78,7 @@ info:
     email: julesmichaelgiovanni@gmail.com
     name: Michaël Giovanni Jules
     url: https://mgjules.dev
-  description: A REST API for playing with a deck of cards.
+  description: A REST/gRPC API for playing with a deck of cards.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html

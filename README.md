@@ -4,7 +4,7 @@
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=for-the-badge)](https://conventionalcommits.org)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=for-the-badge)](LICENSE)
 
-Deckr provides a REST API to simulate a deck of cards.
+Deckr provides a REST/gRPC API to simulate a deck of cards.
 
 
 ## Contents
@@ -20,8 +20,8 @@ Deckr provides a REST API to simulate a deck of cards.
       - [Build deckr for MacOS M1](#build-deckr-for-macos-m1)
   - [Install](#install)
   - [Usage](#usage)
-    - [REST API server](#rest-api-server)
-  - [REST API documentation](#rest-api-documentation)
+    - [REST/gRPC API server](#rest-api-server)
+  - [REST/gRPC API documentation](#rest-api-documentation)
   - [License](#license)
 
 ## Requirements
@@ -45,7 +45,7 @@ Deckr provides a REST API to simulate a deck of cards.
     $ go install github.com/onsi/ginkgo/v2/ginkgo@latest
     ```
     
-- [Swag](https://github.com/swaggo/swag) - Generate REST API documentation.
+- [Swag](https://github.com/swaggo/swag) - Generate REST/gRPC API documentation.
         
     ```shell
     $ go install github.com/swaggo/swag/cmd/swag@latest
@@ -149,19 +149,19 @@ $ deckr --help
 
 ```
 NAME:
-   deckr - A REST API for playing with a deck of cards
+   deckr - A REST/gRPC API for playing with a deck of cards
 
 USAGE:
    deckr [global options] command [command options] [arguments...]
 
 DESCRIPTION:
-   Deckr exposes a REST API for playing with a deck of cards of your choice.
+   Deckr exposes a REST/gRPC API for playing with a deck of cards of your choice.
 
 AUTHOR:
    Michaël Giovanni Jules <julesmichaelgiovanni@gmail.com>
 
 COMMANDS:
-   serve       Starts the REST API server.
+   serve       Starts the REST/gRPC API server.
    version, v  Shows the version
    help, h     Shows a list of commands or help for one command
 
@@ -172,7 +172,7 @@ COPYRIGHT:
    (c) 2022 Michaël Giovanni Jules
 ```
 
-### REST API server
+### REST/gRPC API server
 
 ```shell
 $ deckr serve --help
@@ -180,7 +180,7 @@ $ deckr serve --help
 
 ```
 NAME:
-   deckr serve - Starts the REST API server.
+   deckr serve - Starts the REST/gRPC API server.
 
 USAGE:
    deckr serve [command options] [arguments...]
@@ -192,9 +192,9 @@ OPTIONS:
    --help, -h           show help (default: false)
 ```
 
-## REST API documentation
+## REST/gRPC API documentation
 
-The REST API documentation is generated using Swag and is available at `/swagger/index.html`.
+The REST/gRPC API documentation is generated using Swag and is available at `/swagger/index.html`.
 
 ## License
 

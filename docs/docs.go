@@ -389,7 +389,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "Deckr",
-	Description:      "A REST API for playing with a deck of cards.",
+	Description:      "A REST/gRPC API for playing with a deck of cards.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }
