@@ -150,7 +150,7 @@ func (s *Server) handleOpenDeck() gin.HandlerFunc {
 // @Failure      400  {object}  http.Error
 // @Failure      404  {object}  http.Error
 // @Failure      500  {object}  http.Error
-// @Router       /decks/{id}/draw [get]
+// @Router       /decks/{id}/draw [patch]
 func (s *Server) handleDrawCards() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id := c.Param("id")

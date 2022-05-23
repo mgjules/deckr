@@ -147,7 +147,7 @@ const docTemplate = `{
             }
         },
         "/decks/{id}/draw": {
-            "get": {
+            "patch": {
                 "description": "draws cards from a deck of cards given an id and the number of cards",
                 "produces": [
                     "application/json"

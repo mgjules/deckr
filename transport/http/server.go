@@ -86,7 +86,7 @@ func (s *Server) registerRoutes() {
 	{
 		deck.POST("", s.handleCreateDeck())
 		deck.GET("/:id", s.handleOpenDeck())
-		deck.GET("/:id/draw", s.handleDrawCards())
+		deck.PATCH("/:id/draw", s.handleDrawCards())
 		deck.POST("/:id/shuffle", s.handleShuffleDeck())
 	}
 }
