@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             (unknown)
-// source: transport/grpc/deck_service.proto
+// source: transport/v1/deck_service.proto
 
-package grpc
+package v1
 
 import (
 	context "context"
@@ -44,7 +44,7 @@ func NewDeckServiceClient(cc grpc.ClientConnInterface) DeckServiceClient {
 
 func (c *deckServiceClient) CreateDeck(ctx context.Context, in *CreateDeckRequest, opts ...grpc.CallOption) (*CreateDeckResponse, error) {
 	out := new(CreateDeckResponse)
-	err := c.cc.Invoke(ctx, "/grpc.DeckService/CreateDeck", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/transport.v1.DeckService/CreateDeck", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +53,7 @@ func (c *deckServiceClient) CreateDeck(ctx context.Context, in *CreateDeckReques
 
 func (c *deckServiceClient) OpenDeck(ctx context.Context, in *OpenDeckRequest, opts ...grpc.CallOption) (*OpenDeckResponse, error) {
 	out := new(OpenDeckResponse)
-	err := c.cc.Invoke(ctx, "/grpc.DeckService/OpenDeck", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/transport.v1.DeckService/OpenDeck", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +62,7 @@ func (c *deckServiceClient) OpenDeck(ctx context.Context, in *OpenDeckRequest, o
 
 func (c *deckServiceClient) DrawCards(ctx context.Context, in *DrawCardsRequest, opts ...grpc.CallOption) (*DrawCardsResponse, error) {
 	out := new(DrawCardsResponse)
-	err := c.cc.Invoke(ctx, "/grpc.DeckService/DrawCards", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/transport.v1.DeckService/DrawCards", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +71,7 @@ func (c *deckServiceClient) DrawCards(ctx context.Context, in *DrawCardsRequest,
 
 func (c *deckServiceClient) ShuffleDeck(ctx context.Context, in *ShuffleDeckRequest, opts ...grpc.CallOption) (*ShuffleDeckResponse, error) {
 	out := new(ShuffleDeckResponse)
-	err := c.cc.Invoke(ctx, "/grpc.DeckService/ShuffleDeck", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/transport.v1.DeckService/ShuffleDeck", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -134,7 +134,7 @@ func _DeckService_CreateDeck_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.DeckService/CreateDeck",
+		FullMethod: "/transport.v1.DeckService/CreateDeck",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DeckServiceServer).CreateDeck(ctx, req.(*CreateDeckRequest))
@@ -152,7 +152,7 @@ func _DeckService_OpenDeck_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.DeckService/OpenDeck",
+		FullMethod: "/transport.v1.DeckService/OpenDeck",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DeckServiceServer).OpenDeck(ctx, req.(*OpenDeckRequest))
@@ -170,7 +170,7 @@ func _DeckService_DrawCards_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.DeckService/DrawCards",
+		FullMethod: "/transport.v1.DeckService/DrawCards",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DeckServiceServer).DrawCards(ctx, req.(*DrawCardsRequest))
@@ -188,7 +188,7 @@ func _DeckService_ShuffleDeck_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.DeckService/ShuffleDeck",
+		FullMethod: "/transport.v1.DeckService/ShuffleDeck",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DeckServiceServer).ShuffleDeck(ctx, req.(*ShuffleDeckRequest))
@@ -200,7 +200,7 @@ func _DeckService_ShuffleDeck_Handler(srv interface{}, ctx context.Context, dec 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var DeckService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "grpc.DeckService",
+	ServiceName: "transport.v1.DeckService",
 	HandlerType: (*DeckServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -221,5 +221,5 @@ var DeckService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "transport/grpc/deck_service.proto",
+	Metadata: "transport/v1/deck_service.proto",
 }

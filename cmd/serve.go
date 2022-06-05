@@ -13,6 +13,7 @@ import (
 	"github.com/mgjules/deckr/repo"
 	"github.com/mgjules/deckr/transport"
 	"github.com/urfave/cli/v2"
+	"golang.org/x/sync/errgroup"
 )
 
 var serve = &cli.Command{
@@ -26,10 +27,16 @@ var serve = &cli.Command{
 			EnvVars: []string{"DECKR_DEBUG"},
 		},
 		&cli.StringFlag{
-			Name:    "server-uri",
-			Value:   "http://localhost:9000",
-			Usage:   "URI of server",
-			EnvVars: []string{"DECKR_SERVER_URI"},
+			Name:    "server-host",
+			Value:   "localhost",
+			Usage:   "HOST of server",
+			EnvVars: []string{"DECKR_SERVER_HOST"},
+		},
+		&cli.IntFlag{
+			Name:    "server-port",
+			Value:   9000,
+			Usage:   "PORT of server",
+			EnvVars: []string{"DECKR_SERVER_PORT"},
 		},
 		&cli.StringFlag{
 			Name:    "storage-uri",
@@ -67,13 +74,20 @@ var serve = &cli.Command{
 			return fmt.Errorf("migrate repository: %w", err)
 		}
 
-		transporter, err := transport.NewTransporter(debug, c.String("server-uri"), log, info, repository)
-		if err != nil {
-			return fmt.Errorf("new transporter: %w", err)
-		}
+		host := c.String("server-host")
+		port := c.Int("server-port")
+		grpcServer := transport.NewGRPCServer(host, port, log, repository)
+		httpServer := transport.NewHTTPServer(debug, host, port+1, log, info)
+
 		go func() {
-			if err := transporter.Start(); err != nil {
-				log.Errorf("start transporter: %w", err)
+			if err = grpcServer.Start(); err != nil {
+				log.Errorf("start grpc server: %w", err)
+			}
+		}()
+
+		go func() {
+			if err = httpServer.Start(); err != nil {
+				log.Errorf("start http server: %w", err)
 			}
 		}()
 
@@ -84,10 +98,20 @@ var serve = &cli.Command{
 		ctx, cancel := context.WithTimeout(c.Context, 5*time.Second)
 		defer cancel()
 
-		if err := transporter.Stop(ctx); err != nil {
-			return fmt.Errorf("stop transporter: %w", err)
+		g, ctx := errgroup.WithContext(ctx)
+
+		g.Go(func() error {
+			return grpcServer.Stop(ctx)
+		})
+
+		g.Go(func() error {
+			return httpServer.Stop(ctx)
+		})
+
+		if err = g.Wait(); err != nil {
+			return fmt.Errorf("wait for servers to stop: %w", err)
 		}
 
-		return nil
+		return err
 	},
 }

@@ -1,9 +1,16 @@
 # Documentation: https://docs.buf.build/configuration/v1/buf-gen-yaml
 version: v1
 plugins:
-  - name: go # Synonym with: protoc-gen-<name>
+  - name: go
     out: .
     opt: paths=source_relative
-  - name: go-grpc # Synonym with: protoc-gen-<name>
+  - name: go-grpc
     out: .
     opt: paths=source_relative
+  - name: grpc-gateway
+    out: .
+    opt:
+      - paths=source_relative
+      - generate_unbound_methods=true
+  - name: openapiv2
+    out: .

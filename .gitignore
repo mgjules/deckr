@@ -16,5 +16,5 @@
 
 # Kreya
 *.krproj
-transport/grpc/DeckService
-transport/grpc/DeckService/*
+transport/DeckService
+transport/DeckService/*

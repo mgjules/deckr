@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package grpc;
+package transport.v1;
 
-option go_package = "github.com/mgjules/deckr/grpc;grpc";
+option go_package = "github.com/mgjules/deckr/transport/v1;v1";
 
 // DeckOpened represents a opened deck of cards.
 message DeckOpened {

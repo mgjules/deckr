@@ -14,14 +14,13 @@ Deckr provides a REST/gRPC API to simulate a deck of cards.
   - [Requirements](#requirements)
   - [Mage Targets](#mage-targets)
     - [Example](#example)
-      - [Generate docs](#generate-docs)
       - [Generate stubs from proto files](#generate-stubs-from-proto-files)
       - [Run tests with race detector](#run-tests-with-race-detector)
       - [Build deckr for MacOS M1](#build-deckr-for-macos-m1)
   - [Install](#install)
   - [Usage](#usage)
-    - [REST/gRPC API server](#rest-api-server)
-  - [REST/gRPC API documentation](#rest-api-documentation)
+    - [REST/gRPC API server](#restgrpc-api-server)
+  - [REST API documentation](#rest-api-documentation)
   - [License](#license)
 
 ## Requirements
@@ -43,12 +42,6 @@ Deckr provides a REST/gRPC API to simulate a deck of cards.
         
     ```shell
     $ go install github.com/onsi/ginkgo/v2/ginkgo@latest
-    ```
-    
-- [Swag](https://github.com/swaggo/swag) - Generate REST/gRPC API documentation.
-        
-    ```shell
-    $ go install github.com/swaggo/swag/cmd/swag@latest
     ```
 
 - [Buf](https://github.com/bufbuild/buf) - A new way of working with Protocol Buffers.
@@ -89,7 +82,6 @@ Targets:
   build:macOSAmd64    Builds for MacOS 64bit
   build:macOSArm64    Builds for MacOS M1
   build:winAmd64      Builds for Windows 64bit
-  docs                Generates docs
   lint                Run golangci linters
   proto               Generate stubs from proto files
   test                Run tests
@@ -98,12 +90,6 @@ Targets:
 ```
 
 ### Example
-
-#### Generate docs
-
-```shell
-$ mage -v docs
-```
 
 #### Generate stubs from proto files
 
@@ -187,14 +173,15 @@ USAGE:
 
 OPTIONS:
    --debug              whether running in PROD or DEBUG mode (default: false) [$DECKR_DEBUG]
-   --server-uri value   URI of server (default: "http://localhost:9000") [$DECKR_SERVER_URI]
+   --server-host value  HOST of server (default: "localhost") [$DECKR_SERVER_HOST]
+   --server-port value  PORT of server (default: 9000) [$DECKR_SERVER_PORT]
    --storage-uri value  URI of storage (default: "inmemory://") [$DECKR_STORAGE_URI]
    --help, -h           show help (default: false)
 ```
 
-## REST/gRPC API documentation
+## REST API documentation
 
-The REST/gRPC API documentation is generated using Swag and is available at `/swagger/index.html`.
+The REST API documentation is generated using Swag and is available at `/swagger/index.html`.
 
 ## License
 

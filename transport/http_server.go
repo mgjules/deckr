@@ -1,4 +1,4 @@
-package http
+package transport
 
 import (
 	"context"
@@ -8,9 +8,12 @@ import (
 
 	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/mgjules/deckr/build"
 	"github.com/mgjules/deckr/logger"
-	"github.com/mgjules/deckr/repo"
+	v1 "github.com/mgjules/deckr/transport/v1"
+	grpc "google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 const (
@@ -20,24 +23,24 @@ const (
 	_readHeaderTimeout = 2 * time.Second
 )
 
-// Server is the main HTTP server.
-type Server struct {
-	router *gin.Engine
-	http   *http.Server
-	log    *logger.Logger
-	build  *build.Info
-	repo   repo.Repository
-	addr   string
+// HTTPServer is the main HTTP server.
+type HTTPServer struct {
+	router   *gin.Engine
+	http     *http.Server
+	log      *logger.Logger
+	build    *build.Info
+	addr     string
+	grpcAddr string
 }
 
-// NewServer creates a new Server.
-func NewServer(
+// NewHTTPServer creates a new Server.
+func NewHTTPServer(
 	debug bool,
-	addr string,
+	host string,
+	port int,
 	logger *logger.Logger,
 	build *build.Info,
-	repo repo.Repository,
-) *Server {
+) *HTTPServer {
 	if !debug {
 		gin.SetMode(gin.ReleaseMode)
 	}
@@ -46,12 +49,12 @@ func NewServer(
 	gin.DefaultWriter = w
 	gin.DefaultErrorWriter = w
 
-	s := Server{
-		router: gin.Default(),
-		addr:   addr,
-		log:    logger,
-		build:  build,
-		repo:   repo,
+	s := HTTPServer{
+		router:   gin.Default(),
+		addr:     fmt.Sprintf("%s:%d", host, port),
+		grpcAddr: fmt.Sprintf("%s:%d", host, port-1),
+		log:      logger,
+		build:    build,
 	}
 
 	desugared := logger.Desugar()
@@ -72,7 +75,7 @@ func NewServer(
 	return &s
 }
 
-func (s *Server) registerRoutes() {
+func (s *HTTPServer) registerRoutes() {
 	// Health Check
 	s.router.GET("/", s.handleHealthCheck())
 
@@ -80,20 +83,26 @@ func (s *Server) registerRoutes() {
 	s.router.GET("/version", s.handleVersion())
 
 	// Swagger
+	s.router.StaticFS("/docs", http.FS(docsFS))
 	s.router.GET("/swagger/*any", s.handleSwagger())
 
-	deck := s.router.Group("/decks")
-	{
-		deck.POST("", s.handleCreateDeck())
-		deck.GET("/:id", s.handleOpenDeck())
-		deck.PATCH("/:id/draw", s.handleDrawCards())
-		deck.POST("/:id/shuffle", s.handleShuffleDeck())
+	// Decks
+	mux := runtime.NewServeMux()
+	if err := v1.RegisterDeckServiceHandlerFromEndpoint(
+		context.Background(),
+		mux,
+		s.grpcAddr,
+		[]grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())},
+	); err != nil {
+		s.log.Errorf("register grpc gateway: %v", err)
 	}
+
+	s.router.Group("/v1/*{grpc_gateway}").Any("", gin.WrapH(mux))
 }
 
 // Start starts the server.
 // It blocks until the server stops.
-func (s *Server) Start() error {
+func (s *HTTPServer) Start() error {
 	s.log.Infof("Listening on http://%s...", s.addr)
 
 	if err := s.http.ListenAndServe(); err != nil && err != http.ErrServerClosed {
@@ -104,7 +113,7 @@ func (s *Server) Start() error {
 }
 
 // Stop stops the server.
-func (s *Server) Stop(ctx context.Context) error {
+func (s *HTTPServer) Stop(ctx context.Context) error {
 	s.log.Info("Stopping server ...")
 
 	if err := s.http.Shutdown(ctx); err != nil {

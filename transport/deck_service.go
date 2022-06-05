@@ -1,4 +1,4 @@
-package grpc
+package transport
 
 import (
 	context "context"
@@ -10,6 +10,7 @@ import (
 	"github.com/mgjules/deckr/logger"
 	"github.com/mgjules/deckr/repo"
 	"github.com/mgjules/deckr/repo/errs"
+	v1 "github.com/mgjules/deckr/transport/v1"
 	"github.com/satori/uuid"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -19,7 +20,7 @@ import (
 type DeckService struct {
 	log  *logger.Logger
 	repo repo.Repository
-	UnimplementedDeckServiceServer
+	v1.UnimplementedDeckServiceServer
 }
 
 // NewDeckService creates a new DeckService.
@@ -32,8 +33,16 @@ func NewDeckService(log *logger.Logger, repo repo.Repository) *DeckService {
 
 // CreateDeck creates a new full or partial deck of cards given an optional
 // list of codes.
-func (s *DeckService) CreateDeck(ctx context.Context, req *CreateDeckRequest) (*CreateDeckResponse, error) {
-	d, err := deck.New(deck.WithComposition(*req.Comp), deck.WithCodes(req.Codes...))
+func (s *DeckService) CreateDeck(
+	ctx context.Context,
+	req *v1.CreateDeckRequest,
+) (*v1.CreateDeckResponse, error) {
+	var comp string
+	if req.Comp != nil {
+		comp = *req.Comp
+	}
+
+	d, err := deck.New(deck.WithComposition(comp), deck.WithCodes(req.Codes...))
 	if err != nil {
 		s.log.Errorf("new deck: %v", err)
 
@@ -55,13 +64,13 @@ func (s *DeckService) CreateDeck(ctx context.Context, req *CreateDeckRequest) (*
 
 	dc := DomainDeckToDeckClosed(d)
 
-	return &CreateDeckResponse{
+	return &v1.CreateDeckResponse{
 		Deck: dc,
 	}, nil
 }
 
 // OpenDeck opens a deck of cards given an id.
-func (s *DeckService) OpenDeck(ctx context.Context, req *OpenDeckRequest) (*OpenDeckResponse, error) {
+func (s *DeckService) OpenDeck(ctx context.Context, req *v1.OpenDeckRequest) (*v1.OpenDeckResponse, error) {
 	id := req.Id
 	if _, err := uuid.FromString(id); err != nil {
 		s.log.Errorf("parse id: %v", err)
@@ -82,14 +91,14 @@ func (s *DeckService) OpenDeck(ctx context.Context, req *OpenDeckRequest) (*Open
 
 	do := DomainDeckToDeckOpened(d)
 
-	return &OpenDeckResponse{
+	return &v1.OpenDeckResponse{
 		Deck: do,
 	}, nil
 }
 
 // DrawCards draws cards from a deck of cards given an id and the number of
 // cards.
-func (s *DeckService) DrawCards(ctx context.Context, req *DrawCardsRequest) (*DrawCardsResponse, error) {
+func (s *DeckService) DrawCards(ctx context.Context, req *v1.DrawCardsRequest) (*v1.DrawCardsResponse, error) {
 	id := req.Id
 	if _, err := uuid.FromString(id); err != nil {
 		s.log.Errorf("parse id: %v", err)
@@ -134,13 +143,16 @@ func (s *DeckService) DrawCards(ctx context.Context, req *DrawCardsRequest) (*Dr
 
 	cards := DomainCardsToCards(drawn)
 
-	return &DrawCardsResponse{
+	return &v1.DrawCardsResponse{
 		Cards: cards,
 	}, nil
 }
 
 // ShuffleDeck shuffles a deck of cards given an id.
-func (s *DeckService) ShuffleDeck(ctx context.Context, req *ShuffleDeckRequest) (*ShuffleDeckResponse, error) {
+func (s *DeckService) ShuffleDeck(
+	ctx context.Context,
+	req *v1.ShuffleDeckRequest,
+) (*v1.ShuffleDeckResponse, error) {
 	id := req.Id
 	if _, err := uuid.FromString(id); err != nil {
 		s.log.Errorf("parse id: %v", err)
@@ -167,14 +179,14 @@ func (s *DeckService) ShuffleDeck(ctx context.Context, req *ShuffleDeckRequest) 
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
-	return &ShuffleDeckResponse{
+	return &v1.ShuffleDeckResponse{
 		Message: "deck shuffled",
 	}, nil
 }
 
 // DomainDeckToDeckClosed transforms a domain deck to a DeckClosed.
-func DomainDeckToDeckClosed(d *deck.Deck) *DeckClosed {
-	var dc DeckClosed
+func DomainDeckToDeckClosed(d *deck.Deck) *v1.DeckClosed {
+	var dc v1.DeckClosed
 	dc.Id = d.ID()
 	dc.Shuffled = d.IsShuffled()
 	dc.Remaining = uint32(d.Remaining())
@@ -183,8 +195,8 @@ func DomainDeckToDeckClosed(d *deck.Deck) *DeckClosed {
 }
 
 // DomainDeckToDeckOpened transforms a domain deck to a DeckOpened.
-func DomainDeckToDeckOpened(d *deck.Deck) *DeckOpened {
-	var do DeckOpened
+func DomainDeckToDeckOpened(d *deck.Deck) *v1.DeckOpened {
+	var do v1.DeckOpened
 	do.Id = d.ID()
 	do.Shuffled = d.IsShuffled()
 	do.Remaining = uint32(d.Remaining())
@@ -194,10 +206,10 @@ func DomainDeckToDeckOpened(d *deck.Deck) *DeckOpened {
 }
 
 // DomainCardsToCards transforms domain cards to Cards.
-func DomainCardsToCards(dc []card.Card) []*Card {
-	var cc []*Card
+func DomainCardsToCards(dc []card.Card) []*v1.Card {
+	var cc []*v1.Card
 	for _, card := range dc {
-		cc = append(cc, &Card{
+		cc = append(cc, &v1.Card{
 			Value: card.Rank().String(),
 			Suit:  card.Suit().String(),
 			Code:  card.Code().String(),

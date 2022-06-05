@@ -1,0 +1,262 @@
+syntax = "proto3";
+
+package transport.v1;
+
+option go_package = "github.com/mgjules/deckr/transport/v1;v1";
+
+import "transport/v1/deck.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Deckr";
+    version: "v0.3.2";
+    description: "A REST/gRPC API for playing with a deck of cards.";
+    contact: {
+      name: "Michaël Giovanni Jules";
+      url: "https://mgjules.dev";
+      email: "julesmichaelgiovanni@gmail.com";
+    };
+    license: {
+      name: "Apache 2.0 License";
+      url: "https://github.com/mgjules/deckr/blob/master/LICENSE";
+    };
+  };
+  schemes: HTTP;
+  consumes: "application/json";
+  produces: "application/json";
+};
+
+// CreateDeckRequest holds the composition and optional codes needed to create a deck.
+message CreateDeckRequest {
+  optional string comp = 1;
+  repeated string codes = 2;
+}
+
+// CreateDeckResponse holds the deck created.
+message CreateDeckResponse {
+  DeckClosed deck = 1;
+}
+
+// OpenDeckRequest holds the deck id needed to open a deck.
+message OpenDeckRequest { string id = 1; }
+
+// OpenDeckResponse holds the deck opened.
+message OpenDeckResponse {
+  DeckOpened deck = 1;
+}
+
+// DrawCardsRequest holds the id of the deck and number of cards to draw from the deck.
+message DrawCardsRequest {
+  string id = 1;
+  int32 num = 2;
+}
+
+// DrawCardsResponse holds the cards drawn.
+message DrawCardsResponse {
+  repeated Card cards = 1;
+}
+
+// ShuffleDeckRequest holds the id of the deck to shuffle.
+message ShuffleDeckRequest { string id = 1; }
+
+// ShuffleDeckResponse holds the message after shuffling a deck.
+message ShuffleDeckResponse { string message = 1; }
+
+service DeckService {
+  // CreateDeck creates a new full or partial deck of cards given an optional
+  // list of codes.
+  rpc CreateDeck(CreateDeckRequest) returns (CreateDeckResponse) {
+    option (google.api.http) = {
+      post: "/v1/decks"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "creates a new full or partial deck of cards given an optional list of codes.";
+      operation_id: "CreateDeck";
+      responses: {
+        key: "200"
+        value: {
+          description: "A freshly created deck."
+        }
+      };
+      responses: {
+        key: "400"
+        value: {
+          description: "The request was malformed."
+          schema: {
+            json_schema: {
+              ref: "#/definitions/rpcStatus"
+            }
+          }
+        }
+      };
+      responses: {
+        key: "500"
+        value: {
+          description: "Internal server error."
+          schema: {
+            json_schema: {
+              ref: "#/definitions/rpcStatus"
+            }
+          }
+        }
+      };
+    };
+  }
+
+  // OpenDeck opens a deck of cards given an id.
+  rpc OpenDeck(OpenDeckRequest) returns (OpenDeckResponse) {
+    option (google.api.http) = {
+      get: "/v1/decks/{id}"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "opens a deck of cards given an id.";
+      operation_id: "OpenDeck";
+      responses: {
+        key: "200"
+        value: {
+          description: "A deck."
+        }
+      };
+      responses: {
+        key: "400"
+        value: {
+          description: "The request was malformed."
+          schema: {
+            json_schema: {
+              ref: "#/definitions/rpcStatus"
+            }
+          }
+        }
+      };
+      responses: {
+        key: "404"
+        value: {
+          description: "Deck not found."
+          schema: {
+            json_schema: {
+              ref: "#/definitions/rpcStatus"
+            }
+          }
+        }
+      };
+      responses: {
+        key: "500"
+        value: {
+          description: "Internal server error."
+          schema: {
+            json_schema: {
+              ref: "#/definitions/rpcStatus"
+            }
+          }
+        }
+      };
+    };
+  }
+
+  // DrawCards draws cards from a deck of cards given an id and the number of
+  // cards.
+  rpc DrawCards(DrawCardsRequest) returns (DrawCardsResponse) {
+    option (google.api.http) = {
+      patch: "/v1/decks/{id}/draw/{num}"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "draws cards from a deck of cards given an id and the number of cards.";
+      operation_id: "DrawCards";
+      responses: {
+        key: "200"
+        value: {
+          description: "A list of cards."
+        }
+      };
+      responses: {
+        key: "400"
+        value: {
+          description: "The request was malformed."
+          schema: {
+            json_schema: {
+              ref: "#/definitions/rpcStatus"
+            }
+          }
+        }
+      };
+      responses: {
+        key: "404"
+        value: {
+          description: "Deck not found."
+          schema: {
+            json_schema: {
+              ref: "#/definitions/rpcStatus"
+            }
+          }
+        }
+      };
+      responses: {
+        key: "500"
+        value: {
+          description: "Internal server error."
+          schema: {
+            json_schema: {
+              ref: "#/definitions/rpcStatus"
+            }
+          }
+        }
+      };
+    };
+  }
+
+  // ShuffleDeck shuffles a deck of cards given an id.
+  rpc ShuffleDeck(ShuffleDeckRequest) returns (ShuffleDeckResponse) {
+    option (google.api.http) = {
+      post: "/v1/decks/{id}/shuffle"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "shuffles a deck of cards given an id.";
+      operation_id: "ShuffleDeck";
+      responses: {
+        key: "200"
+        value: {
+          description: "A successful response."
+        }
+      };
+      responses: {
+        key: "400"
+        value: {
+          description: "The request was malformed."
+          schema: {
+            json_schema: {
+              ref: "#/definitions/rpcStatus"
+            }
+          }
+        }
+      };
+      responses: {
+        key: "404"
+        value: {
+          description: "Deck not found."
+          schema: {
+            json_schema: {
+              ref: "#/definitions/rpcStatus"
+            }
+          }
+        }
+      };
+      responses: {
+        key: "500"
+        value: {
+          description: "Internal server error."
+          schema: {
+            json_schema: {
+              ref: "#/definitions/rpcStatus"
+            }
+          }
+        }
+      };
+    };
+  }
+}

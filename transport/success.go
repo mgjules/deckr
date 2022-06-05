@@ -1,4 +1,4 @@
-package http
+package transport
 
 // Success defines the structure for a successful response.
 // @Description  defines the structure for a successful response

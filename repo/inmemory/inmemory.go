@@ -41,7 +41,7 @@ func (r *Repository) Get(_ context.Context, id string) (*deck.Deck, error) {
 		return nil, fmt.Errorf("deck '%s': %w", id, err)
 	}
 
-	r.log.Debugf("get deck '%s'", d.ID)
+	r.log.Debugf("get deck '%s'", d.ID())
 
 	return d, nil
 }

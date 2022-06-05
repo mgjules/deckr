@@ -41,11 +41,6 @@ func Tidy() error {
 	return sh.Run("go", "mod", "tidy")
 }
 
-// Generates docs
-func Docs() error {
-	return sh.Run("swag", "init", "--parseDependency", "--parseInternal")
-}
-
 // Run golangci linters
 func Lint() error {
 	return sh.Run("golangci-lint", "run", "./...", "--fast")

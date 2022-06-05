@@ -1,0 +1,361 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Deckr",
+    "description": "A REST/gRPC API for playing with a deck of cards.",
+    "version": "v0.3.2",
+    "contact": {
+      "name": "Michaël Giovanni Jules",
+      "url": "https://mgjules.dev",
+      "email": "julesmichaelgiovanni@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0 License",
+      "url": "https://github.com/mgjules/deckr/blob/master/LICENSE"
+    }
+  },
+  "tags": [
+    {
+      "name": "DeckService"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/decks": {
+      "post": {
+        "summary": "creates a new full or partial deck of cards given an optional list of codes.",
+        "operationId": "CreateDeck",
+        "responses": {
+          "200": {
+            "description": "A freshly created deck.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateDeckResponse"
+            }
+          },
+          "400": {
+            "description": "The request was malformed.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "comp",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "codes",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "tags": [
+          "DeckService"
+        ]
+      }
+    },
+    "/v1/decks/{id}": {
+      "get": {
+        "summary": "opens a deck of cards given an id.",
+        "operationId": "OpenDeck",
+        "responses": {
+          "200": {
+            "description": "A deck.",
+            "schema": {
+              "$ref": "#/definitions/v1OpenDeckResponse"
+            }
+          },
+          "400": {
+            "description": "The request was malformed.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Deck not found.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "DeckService"
+        ]
+      }
+    },
+    "/v1/decks/{id}/draw/{num}": {
+      "patch": {
+        "summary": "draws cards from a deck of cards given an id and the number of cards.",
+        "operationId": "DrawCards",
+        "responses": {
+          "200": {
+            "description": "A list of cards.",
+            "schema": {
+              "$ref": "#/definitions/v1DrawCardsResponse"
+            }
+          },
+          "400": {
+            "description": "The request was malformed.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Deck not found.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "num",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "DeckService"
+        ]
+      }
+    },
+    "/v1/decks/{id}/shuffle": {
+      "post": {
+        "summary": "shuffles a deck of cards given an id.",
+        "operationId": "ShuffleDeck",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ShuffleDeckResponse"
+            }
+          },
+          "400": {
+            "description": "The request was malformed.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Deck not found.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "DeckService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1Card": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "suit": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        }
+      },
+      "description": "Card represents a single card."
+    },
+    "v1CreateDeckResponse": {
+      "type": "object",
+      "properties": {
+        "deck": {
+          "$ref": "#/definitions/v1DeckClosed"
+        }
+      },
+      "description": "CreateDeckResponse holds the deck created."
+    },
+    "v1DeckClosed": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "shuffled": {
+          "type": "boolean"
+        },
+        "remaining": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "description": "DeckClosed represents a closed deck of cards."
+    },
+    "v1DeckOpened": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "shuffled": {
+          "type": "boolean"
+        },
+        "remaining": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "cards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Card"
+          }
+        }
+      },
+      "description": "DeckOpened represents a opened deck of cards."
+    },
+    "v1DrawCardsResponse": {
+      "type": "object",
+      "properties": {
+        "cards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Card"
+          }
+        }
+      },
+      "description": "DrawCardsResponse holds the cards drawn."
+    },
+    "v1OpenDeckResponse": {
+      "type": "object",
+      "properties": {
+        "deck": {
+          "$ref": "#/definitions/v1DeckOpened"
+        }
+      },
+      "description": "OpenDeckResponse holds the deck opened."
+    },
+    "v1ShuffleDeckResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      },
+      "description": "ShuffleDeckResponse holds the message after shuffling a deck."
+    }
+  }
+}

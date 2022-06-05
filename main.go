@@ -8,17 +8,6 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-// @title        Deckr
-// @version      v0.3.2
-// @description  A REST/gRPC API for playing with a deck of cards.
-
-// @contact.name   Michaël Giovanni Jules
-// @contact.url    https://mgjules.dev
-// @contact.email  julesmichaelgiovanni@gmail.com
-
-// @license.name  Apache 2.0
-// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
-
 func main() {
 	app := cli.NewApp()
 	app.Name = "deckr"

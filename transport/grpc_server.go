@@ -1,4 +1,4 @@
-package grpc
+package transport
 
 import (
 	context "context"
@@ -7,25 +7,27 @@ import (
 
 	"github.com/mgjules/deckr/logger"
 	"github.com/mgjules/deckr/repo"
+	v1 "github.com/mgjules/deckr/transport/v1"
 	grpc "google.golang.org/grpc"
 )
 
-// Server is a grpc server.
-type Server struct {
+// GRPCServer is a grpc server.
+type GRPCServer struct {
 	addr   string
 	server *grpc.Server
 	log    *logger.Logger
 	repo   repo.Repository
 }
 
-// NewServer creates a new grpc server.
-func NewServer(
-	addr string,
+// NewGRPCServer creates a new grpc server.
+func NewGRPCServer(
+	host string,
+	port int,
 	log *logger.Logger,
 	repo repo.Repository,
-) *Server {
-	s := &Server{
-		addr:   addr,
+) *GRPCServer {
+	s := &GRPCServer{
+		addr:   fmt.Sprintf("%s:%d", host, port),
 		server: grpc.NewServer(),
 		log:    log,
 		repo:   repo,
@@ -37,12 +39,12 @@ func NewServer(
 }
 
 // registerServices registers services with the grpc server.
-func (s *Server) registerServices() {
-	RegisterDeckServiceServer(s.server, NewDeckService(s.log, s.repo))
+func (s *GRPCServer) registerServices() {
+	v1.RegisterDeckServiceServer(s.server, NewDeckService(s.log, s.repo))
 }
 
 // Start starts the grpc server.
-func (s *Server) Start() error {
+func (s *GRPCServer) Start() error {
 	s.log.Infof("Listening on tcp://%s...", s.addr)
 
 	lis, err := net.Listen("tcp", s.addr)
@@ -58,7 +60,7 @@ func (s *Server) Start() error {
 }
 
 // Stop stops the grpc server.
-func (s *Server) Stop(context.Context) error {
+func (s *GRPCServer) Stop(context.Context) error {
 	s.log.Info("Stopping server ...")
 
 	s.server.GracefulStop()
