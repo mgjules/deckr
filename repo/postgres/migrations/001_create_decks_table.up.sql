@@ -1,0 +1,8 @@
+CREATE TABLE decks (
+    id VARCHAR(36) PRIMARY KEY,
+    shuffled BOOLEAN NOT NULL DEFAULT FALSE,
+    composition VARCHAR(64) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE,
+    codes VARCHAR(3)[]
+);

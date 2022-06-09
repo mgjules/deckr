@@ -20,7 +20,7 @@ type Repository interface {
 }
 
 // NewRepository returns a new repository.
-func NewRepository(uri string, log *logger.Logger) (Repository, error) {
+func NewRepository(ctx context.Context, uri string, log *logger.Logger) (Repository, error) {
 	u, err := url.Parse(uri)
 	if err != nil {
 		return nil, fmt.Errorf("invalid repository URI: %w", err)
@@ -28,9 +28,9 @@ func NewRepository(uri string, log *logger.Logger) (Repository, error) {
 
 	switch u.Scheme {
 	case "inmemory":
-		return inmemory.NewRepository(log), nil
+		return inmemory.NewRepository(ctx, log), nil
 	case "postgresql":
-		repo, err := postgres.NewRepository(uri, log)
+		repo, err := postgres.NewRepository(ctx, uri, log)
 		if err != nil {
 			return nil, fmt.Errorf("new postgres repository: %w", err)
 		}

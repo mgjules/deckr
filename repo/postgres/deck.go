@@ -3,7 +3,6 @@ package postgres
 import (
 	"fmt"
 
-	"github.com/lib/pq"
 	"github.com/mgjules/deckr/deck"
 	"gorm.io/gorm"
 )
@@ -11,10 +10,10 @@ import (
 // Deck represents a deck of cards.
 type Deck struct {
 	gorm.Model
-	ID          string `gorm:"primaryKey"`
+	ID          string
 	Shuffled    bool
-	Composition string         `gorm:"type:varchar(64)"`
-	Codes       pq.StringArray `gorm:"type:varchar(3)[]"`
+	Composition string
+	Codes       []string
 }
 
 // DomainDeckToDeck transforms a domain deck to a repo deck.

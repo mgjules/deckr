@@ -19,7 +19,7 @@ type Repository struct {
 }
 
 // NewRepository creates a new in-memory repository.
-func NewRepository(log *logger.Logger) *Repository {
+func NewRepository(_ context.Context, log *logger.Logger) *Repository {
 	return &Repository{
 		log:   log,
 		items: make(map[string]*Deck),

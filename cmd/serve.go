@@ -60,7 +60,7 @@ var serve = &cli.Command{
 
 		storageURI := c.String("storage-uri")
 
-		repository, err := repo.NewRepository(storageURI, log)
+		repository, err := repo.NewRepository(c.Context, storageURI, log)
 		if err != nil {
 			return fmt.Errorf("new repository: %w", err)
 		}
