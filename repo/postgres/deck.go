@@ -4,12 +4,10 @@ import (
 	"fmt"
 
 	"github.com/mgjules/deckr/deck"
-	"gorm.io/gorm"
 )
 
 // Deck represents a deck of cards.
 type Deck struct {
-	gorm.Model
 	ID          string
 	Shuffled    bool
 	Composition string
