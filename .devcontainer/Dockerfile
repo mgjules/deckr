@@ -34,6 +34,7 @@ RUN LATEST_COMPOSE_VERSION=$(curl -sSL "https://api.github.com/repos/docker/comp
 
 ARG NONROOT_USER=vscode
 
+# Create /usr/local/share/docker-init.sh
 RUN echo "#!/bin/sh\n\
     sudoIf() { if [ \"\$(id -u)\" -ne 0 ]; then sudo \"\$@\"; else \"\$@\"; fi }\n\
     SOCKET_GID=\$(stat -c '%g' /var/run/docker.sock) \n\
