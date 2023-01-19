@@ -7,7 +7,7 @@ require (
 	github.com/gin-contrib/zap v0.0.2
 	github.com/gin-gonic/gin v1.7.7
 	github.com/golang-migrate/migrate/v4 v4.15.2
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.3
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.15.0
 	github.com/imdario/mergo v0.3.13
 	github.com/jackc/pgx/v4 v4.16.1
 	github.com/json-iterator/go v1.1.12
@@ -19,8 +19,8 @@ require (
 	github.com/urfave/cli/v2 v2.6.0
 	go.uber.org/zap v1.24.0
 	golang.org/x/sync v0.1.0
-	google.golang.org/genproto v0.0.0-20220519153652-3a47de7e79bd
-	google.golang.org/grpc v1.46.2
+	google.golang.org/genproto v0.0.0-20221207170731-23e4bf6bdc37
+	google.golang.org/grpc v1.51.0
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.2.0
 	google.golang.org/protobuf v1.28.1
 )
