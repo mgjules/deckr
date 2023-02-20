@@ -13,7 +13,7 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/magefile/mage v1.14.0
 	github.com/onsi/ginkgo/v2 v2.8.1
-	github.com/onsi/gomega v1.26.0
+	github.com/onsi/gomega v1.27.1
 	github.com/satori/uuid v1.2.0
 	github.com/swaggo/gin-swagger v1.4.3
 	github.com/urfave/cli/v2 v2.24.3
@@ -73,7 +73,7 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	golang.org/x/crypto v0.6.0 // indirect
-	golang.org/x/net v0.6.0 // indirect
+	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
 	golang.org/x/tools v0.6.0 // indirect
