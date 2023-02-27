@@ -12,8 +12,8 @@ require (
 	github.com/jackc/pgx/v4 v4.18.0
 	github.com/json-iterator/go v1.1.12
 	github.com/magefile/mage v1.14.0
-	github.com/onsi/ginkgo/v2 v2.8.3
-	github.com/onsi/gomega v1.27.0
+	github.com/onsi/ginkgo/v2 v2.8.4
+	github.com/onsi/gomega v1.27.1
 	github.com/satori/uuid v1.2.0
 	github.com/swaggo/gin-swagger v1.4.3
 	github.com/urfave/cli/v2 v2.24.4
