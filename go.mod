@@ -9,7 +9,7 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.15.2
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.15.1
 	github.com/imdario/mergo v0.3.13
-	github.com/jackc/pgx/v4 v4.18.0
+	github.com/jackc/pgx/v4 v4.18.1
 	github.com/json-iterator/go v1.1.12
 	github.com/magefile/mage v1.14.0
 	github.com/onsi/ginkgo/v2 v2.8.4
