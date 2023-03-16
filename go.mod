@@ -22,7 +22,7 @@ require (
 	google.golang.org/genproto v0.0.0-20230221151758-ace64dc21148
 	google.golang.org/grpc v1.53.0
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.2.0
-	google.golang.org/protobuf v1.29.0
+	google.golang.org/protobuf v1.29.1
 )
 
 require (
